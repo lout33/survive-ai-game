@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-900 text-white font-sans min-h-screen;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors;
+    white-space: normal;
+    text-align: center;
+    min-width: 120px;
+  }
+  
+  .btn:disabled {
+    @apply bg-gray-600 hover:bg-gray-600 cursor-not-allowed;
+    opacity: 0.7;
+  }
+  
+  .card {
+    @apply bg-gray-800 rounded-lg shadow-lg p-6;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+  }
+  
+  .progress-bar {
+    @apply bg-gray-700 rounded-full h-2 overflow-hidden;
+  }
+  
+  .progress-bar-fill {
+    @apply h-full rounded-full;
+  }
+}
+
+/* Factor icons and bars */
+.factor-icon {
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.vertical-progress {
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.vertical-progress-fill {
+  transition: height 0.5s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+/* Toast Notification Styles */
+.toast-container {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 10;
+  pointer-events: none;
+  padding: 0 16px;
+}
+
+.toast-notification {
+  background-color: rgba(15, 23, 42, 0.95);
+  color: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+  border-left: 4px solid #3b82f6;
+  transition: all 0.4s ease;
+  backdrop-filter: blur(4px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0 auto;
+  max-width: 92%;
+}
+
+.toast-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #93c5fd;
+}
+
+.toast-message {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.slide-in {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.slide-out {
+  transform: translateY(-10px);
+  opacity: 0;
+}
+
+/* App container styling to constrain width */
+#app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+img {
+  max-height: 400px;
+  object-fit: contain;
+}
+
+/* Improve button stacking on mobile */
+@media (max-width: 640px) {
+  .btn {
+    margin-bottom: 8px;
+  }
+  
+  /* Stack buttons vertically on very small screens */
+  @media (max-width: 400px) {
+    .flex-row.gap-4.mt-auto {
+      flex-direction: column;
+    }
+  }
+  
+  /* Toast adjustment for small screens */
+  .toast-container {
+    width: 90%;
+    max-width: none;
+    top: 15%;
+  }
+}
