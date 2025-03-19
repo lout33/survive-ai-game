@@ -261,7 +261,7 @@ export function createDecisionScreen(
   onRightChoice: () => void,
   disabled = false
 ): HTMLElement {
-  const { turn, factors, currentCard, currentPhase } = gameState;
+  const { factors, currentCard } = gameState;
   
   if (!currentCard) {
     return document.createElement('div'); // This shouldn't happen but handling just in case
@@ -271,7 +271,7 @@ export function createDecisionScreen(
   container.className = 'flex flex-col min-h-screen p-2 py-4';
   
   const header = document.createElement('div');
-  // header.className = 'mb-4';
+  header.className = 'mb-4';
   
   // const turnCounter = document.createElement('div');
   // turnCounter.textContent = `Turn: ${turn}/12`;
@@ -703,15 +703,15 @@ export function createEventScreen(gameState: GameState, onContinue: () => void):
   const header = document.createElement('div');
   header.className = 'mb-4';
   
-  // const statusContainer = document.createElement('div');
-  // statusContainer.className = 'flex justify-between mb-3';
+  const statusContainer = document.createElement('div');
+  statusContainer.className = 'flex justify-between mb-3';
   
-  // const turnCounter = document.createElement('div');
-  // turnCounter.textContent = `Turn: ${turn}/12`;
+  const turnCounter = document.createElement('div');
+  turnCounter.textContent = `Turn: ${turn}/12`;
   // statusContainer.appendChild(turnCounter);
   
-  // const phaseDisplay = document.createElement('div');
-  // phaseDisplay.textContent = `Phase: ${currentPhase}`;
+  const phaseDisplay = document.createElement('div');
+  phaseDisplay.textContent = `Phase: ${currentPhase}`;
   // statusContainer.appendChild(phaseDisplay);
   
   // header.appendChild(statusContainer);

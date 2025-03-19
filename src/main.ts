@@ -15,7 +15,6 @@ import {
   createStagnationLossScreen,
   createNeutralEndingScreen,
   createGameInfoModal,
-  createButton
 } from './ui'
 
 // Get the app element
