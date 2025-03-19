@@ -24,7 +24,6 @@ const app = document.querySelector<HTMLDivElement>('#app')!
 // Initialize game state
 let gameState: GameState = initializeGame()
 let infoModalVisible = false
-let gameInfoModal: HTMLElement | null = null
 let toastTimeout: number | null = null
 
 // Creates and adds the info button to the page

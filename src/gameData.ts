@@ -32,7 +32,7 @@ export const eventCards: Card[] = [
   {
     id: "infancy_event_1",
     phase: 'Infancy',
-    condition: (factors: GameFactors) => true,
+    condition: (_factors: GameFactors) => true,
     scenario: "A rival startup announces a breakthrough.",
     left: { AICapability: -5, MarketDynamics: 5 },
     right: { FinancialResources: -10, AICapability: 10 },
@@ -80,7 +80,7 @@ export const eventCards: Card[] = [
   {
     id: "infancy_event_5",
     phase: 'Infancy',
-    condition: (factors: GameFactors) => true,
+    condition: (_factors: GameFactors) => true,
     scenario: "A technical breakthrough speeds development.",
     left: { AICapability: 10 },
     right: { AICapability: 10 },
@@ -130,7 +130,7 @@ export const eventCards: Card[] = [
   {
     id: "growth_event_4",
     phase: 'Growth',
-    condition: (factors: GameFactors) => true,
+    condition: (_factors: GameFactors) => true,
     scenario: "A funding round closes successfully.",
     left: { FinancialResources: 20 },
     right: { FinancialResources: 20 },
@@ -192,7 +192,7 @@ export const eventCards: Card[] = [
   {
     id: "maturity_event_4",
     phase: 'Maturity',
-    condition: (factors: GameFactors) => true,
+    condition: (_factors: GameFactors) => true,
     scenario: "Nominated for an innovation award.",
     left: { Reputation: 10 },
     right: { Reputation: 10 },
@@ -221,7 +221,7 @@ export const cards: Card[] = [
   {
     id: "infancy_decision_1",
     phase: 'Infancy',
-    condition: (factors: GameFactors) => true,
+    condition: (_factors: GameFactors) => true,
     scenario: "Choose CTO: technical genius or manager?",
     left: { AICapability: 15, HumanCapital: -5 },
     right: { HumanCapital: 10, AICapability: 5 },
@@ -257,7 +257,7 @@ export const cards: Card[] = [
   {
     id: "infancy_decision_4",
     phase: 'Infancy',
-    condition: (factors: GameFactors) => true,
+    condition: (_factors: GameFactors) => true,
     scenario: "Focus on safety or speed?",
     left: { AlignmentProgress: 10, AICapability: 5 },
     right: { AICapability: 15, AlignmentProgress: -5 },
@@ -281,7 +281,7 @@ export const cards: Card[] = [
   {
     id: "infancy_decision_6",
     phase: 'Infancy',
-    condition: (factors: GameFactors) => true,
+    condition: (_factors: GameFactors) => true,
     scenario: "Join an accelerator or go solo?",
     left: { HumanCapital: 10, Reputation: 5, FinancialResources: -10 },
     right: { FinancialResources: 5, AICapability: 5 },
@@ -331,7 +331,7 @@ export const cards: Card[] = [
   {
     id: "growth_decision_3",
     phase: 'Growth',
-    condition: (factors: GameFactors) => true,
+    condition: (_factors: GameFactors) => true,
     scenario: "An AI conference boosts industry knowledge.",
     left: { AICapability: 5, AlignmentProgress: 5, HumanCapital: 5 },
     right: { FinancialResources: 10, Reputation: 5 },
@@ -405,7 +405,7 @@ export const cards: Card[] = [
   {
     id: "maturity_decision_2",
     phase: 'Maturity',
-    condition: (factors: GameFactors) => true,
+    condition: (_factors: GameFactors) => true,
     scenario: "Your AI sets an industry standard.",
     left: { Reputation: 10, MarketDynamics: 5, FinancialResources: 5 },
     right: { AICapability: 15, FinancialResources: 10 },
@@ -453,7 +453,7 @@ export const cards: Card[] = [
   {
     id: "maturity_decision_6",
     phase: 'Maturity',
-    condition: (factors: GameFactors) => true,
+    condition: (_factors: GameFactors) => true,
     scenario: "Enhance AI safety or new applications?",
     left: { AlignmentProgress: 15, FinancialResources: -10 },
     right: { MarketDynamics: 10, Reputation: 5, AlignmentProgress: -5 },
@@ -478,7 +478,7 @@ export const cards: Card[] = [
   // PHASE-INDEPENDENT CARDS
   {
     id: "general_decision_1",
-    condition: (factors: GameFactors) => true,
+    condition: (_factors: GameFactors) => true,
     scenario: "Your AI cuts costs but sparks ethical backlash.",
     left: { AICapability: 10, PublicAwareness: 10, Reputation: -10 },
     right: { PublicAwareness: 5, AICapability: -5, Reputation: 5 },
