@@ -47,7 +47,7 @@ export function createFactorBar(name: string, value: number, fullName: string, c
   
   // Create vertical progress bar (more prominent)
   const progressBar = document.createElement('div');
-  progressBar.className = 'h-24 w-4 bg-gray-700 rounded-full relative vertical-progress';
+  progressBar.className = 'h-12 w-4 bg-gray-700 rounded-full relative vertical-progress';
   
   const progressFill = document.createElement('div');
   progressFill.className = 'w-full rounded-full absolute bottom-0 vertical-progress-fill transition-all duration-500';
@@ -268,15 +268,15 @@ export function createDecisionScreen(
   const statusContainer = document.createElement('div');
   statusContainer.className = 'flex justify-between mb-3';
   
-  const turnCounter = document.createElement('div');
-  turnCounter.textContent = `Turn: ${turn}/12`;
-  statusContainer.appendChild(turnCounter);
+  // const turnCounter = document.createElement('div');
+  // turnCounter.textContent = `Turn: ${turn}/12`;
+  // statusContainer.appendChild(turnCounter);
   
-  const phaseDisplay = document.createElement('div');
-  phaseDisplay.textContent = `Phase: ${currentPhase}`;
-  statusContainer.appendChild(phaseDisplay);
+  // const phaseDisplay = document.createElement('div');
+  // phaseDisplay.textContent = `Phase: ${currentPhase}`;
+  // statusContainer.appendChild(phaseDisplay);
   
-  header.appendChild(statusContainer);
+  // header.appendChild(statusContainer);
   
   // Add factors display
   const factorsDisplay = createFactorsDisplay(factors);
@@ -698,18 +698,18 @@ export function createEventScreen(gameState: GameState, onContinue: () => void):
   const header = document.createElement('div');
   header.className = 'mb-4';
   
-  const statusContainer = document.createElement('div');
-  statusContainer.className = 'flex justify-between mb-3';
+  // const statusContainer = document.createElement('div');
+  // statusContainer.className = 'flex justify-between mb-3';
   
-  const turnCounter = document.createElement('div');
-  turnCounter.textContent = `Turn: ${turn}/12`;
-  statusContainer.appendChild(turnCounter);
+  // const turnCounter = document.createElement('div');
+  // turnCounter.textContent = `Turn: ${turn}/12`;
+  // statusContainer.appendChild(turnCounter);
   
-  const phaseDisplay = document.createElement('div');
-  phaseDisplay.textContent = `Phase: ${currentPhase}`;
-  statusContainer.appendChild(phaseDisplay);
+  // const phaseDisplay = document.createElement('div');
+  // phaseDisplay.textContent = `Phase: ${currentPhase}`;
+  // statusContainer.appendChild(phaseDisplay);
   
-  header.appendChild(statusContainer);
+  // header.appendChild(statusContainer);
   
   // Add factors display
   const factorsDisplay = createFactorsDisplay(factors);
