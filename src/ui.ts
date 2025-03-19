@@ -3,11 +3,11 @@ import { GameState, GameFactors } from './types';
 // Create factor bar element
 export function createFactorBar(name: string, value: number, fullName: string, colorClass?: string, icon?: string): HTMLElement {
   const barContainer = document.createElement('div');
-  barContainer.className = 'flex flex-col items-center mb-1 px-1';
+  barContainer.className = 'flex flex-col items-center mb-1 px-1 relative group';
   
-  // Create icon placeholder
+  // Create icon placeholder (hidden by default)
   const iconElement = document.createElement('div');
-  iconElement.className = 'w-8 h-8 rounded-full flex items-center justify-center mb-1 factor-icon text-white';
+  iconElement.className = 'w-8 h-8 rounded-full flex items-center justify-center mb-1 factor-icon text-white opacity-0 group-hover:opacity-100 absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-10 transition-opacity z-10';
   
   // Different colors for different factors
   if (colorClass) {
@@ -38,19 +38,19 @@ export function createFactorBar(name: string, value: number, fullName: string, c
   iconElement.textContent = icon || fullName.charAt(0);
   barContainer.appendChild(iconElement);
   
-  // Add tiny label
+  // Add tiny label (hidden by default)
   const label = document.createElement('span');
-  label.className = 'text-xs text-gray-400 text-center mb-1';
+  label.className = 'text-xs text-gray-400 text-center mb-1 opacity-0 group-hover:opacity-100 absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-4 transition-opacity z-10 whitespace-nowrap';
   label.textContent = fullName;
   label.title = fullName;
   barContainer.appendChild(label);
   
-  // Create vertical progress bar
+  // Create vertical progress bar (more prominent)
   const progressBar = document.createElement('div');
-  progressBar.className = 'h-20 w-3 bg-gray-700 rounded-full mt-1 relative vertical-progress';
+  progressBar.className = 'h-24 w-4 bg-gray-700 rounded-full relative vertical-progress';
   
   const progressFill = document.createElement('div');
-  progressFill.className = 'w-full rounded-full absolute bottom-0 vertical-progress-fill';
+  progressFill.className = 'w-full rounded-full absolute bottom-0 vertical-progress-fill transition-all duration-500';
   progressFill.style.height = `${value}%`;
   
   // Set color
@@ -81,9 +81,9 @@ export function createFactorBar(name: string, value: number, fullName: string, c
   progressBar.appendChild(progressFill);
   barContainer.appendChild(progressBar);
   
-  // Add value label below
+  // Add value label (visible on hover)
   const valueLabel = document.createElement('span');
-  valueLabel.className = 'text-xs mt-1 font-bold';
+  valueLabel.className = 'text-xs mt-1 font-bold opacity-0 group-hover:opacity-100 transition-opacity';
   valueLabel.textContent = value.toString();
   barContainer.appendChild(valueLabel);
   
@@ -199,11 +199,6 @@ export function createStartScreen(onStartGame: () => void): HTMLElement {
   const container = document.createElement('div');
   container.className = 'flex flex-col items-center justify-center min-h-screen p-4 py-8';
   
-  const title = document.createElement('h1');
-  title.className = 'text-2xl md:text-4xl font-bold mb-6 text-center';
-  title.textContent = 'SURVIVE THE AI FUTURE: CEO EDITION';
-  container.appendChild(title);
-  
   const content = document.createElement('div');
   content.className = 'card max-w-2xl w-full mx-auto text-center';
   
@@ -269,11 +264,6 @@ export function createDecisionScreen(
   
   const header = document.createElement('div');
   header.className = 'mb-4';
-  
-  const title = document.createElement('h1');
-  title.className = 'text-xl md:text-3xl font-bold mb-3 text-center';
-  title.textContent = 'SURVIVE THE AI FUTURE: CEO EDITION';
-  header.appendChild(title);
   
   const statusContainer = document.createElement('div');
   statusContainer.className = 'flex justify-between mb-3';
@@ -350,11 +340,6 @@ export function createVictoryScreen(onPlayAgain: () => void): HTMLElement {
   const container = document.createElement('div');
   container.className = 'flex flex-col items-center justify-center min-h-screen p-4';
   
-  const title = document.createElement('h1');
-  title.className = 'text-2xl md:text-4xl font-bold mb-6 text-center';
-  title.textContent = 'SURVIVE THE AI FUTURE: CEO EDITION';
-  container.appendChild(title);
-  
   const content = document.createElement('div');
   content.className = 'card max-w-2xl w-full mx-auto text-center';
   
@@ -399,11 +384,6 @@ export function createDoomLossScreen(gameState: GameState, onPlayAgain: () => vo
   const container = document.createElement('div');
   container.className = 'flex flex-col items-center justify-center min-h-screen p-4';
   
-  const title = document.createElement('h1');
-  title.className = 'text-2xl md:text-4xl font-bold mb-6 text-center';
-  title.textContent = 'SURVIVE THE AI FUTURE: CEO EDITION';
-  container.appendChild(title);
-  
   const content = document.createElement('div');
   content.className = 'card max-w-2xl w-full mx-auto text-center';
   
@@ -446,11 +426,6 @@ export function createStagnationLossScreen(gameState: GameState, onPlayAgain: ()
   
   const container = document.createElement('div');
   container.className = 'flex flex-col items-center justify-center min-h-screen p-4';
-  
-  const title = document.createElement('h1');
-  title.className = 'text-2xl md:text-4xl font-bold mb-6 text-center';
-  title.textContent = 'SURVIVE THE AI FUTURE: CEO EDITION';
-  container.appendChild(title);
   
   const content = document.createElement('div');
   content.className = 'card max-w-2xl w-full mx-auto text-center';
@@ -722,11 +697,6 @@ export function createEventScreen(gameState: GameState, onContinue: () => void):
   
   const header = document.createElement('div');
   header.className = 'mb-4';
-  
-  const title = document.createElement('h1');
-  title.className = 'text-xl md:text-3xl font-bold mb-3 text-center';
-  title.textContent = 'SURVIVE THE AI FUTURE: CEO EDITION';
-  header.appendChild(title);
   
   const statusContainer = document.createElement('div');
   statusContainer.className = 'flex justify-between mb-3';
