@@ -95,7 +95,15 @@ export function createFactorsDisplay(factors: GameFactors): HTMLElement {
   const container = document.createElement('div');
   
   // Main outer container with subtle background
-  container.className = 'mb-4 bg-gray-800/50 rounded-lg p-2';
+  container.className = 'bg-gray-800/50 rounded-lg p-2 relative';
+  
+  // Add info button in the top right
+  const infoButton = document.createElement('button');
+  infoButton.className = 'absolute top-2 right-2 w-6 h-6 bg-blue-700 rounded-full flex items-center justify-center text-white hover:bg-blue-600 hover:text-white font-bold text-xs shadow-md z-10 transition-colors';
+  infoButton.textContent = 'i';
+  infoButton.title = 'Game Info';
+  infoButton.id = 'game-info-button';
+  container.appendChild(infoButton);
   
   // Factor mappings with display names and emoji icons
   const factorMappings = [
@@ -122,7 +130,7 @@ export function createFactorsDisplay(factors: GameFactors): HTMLElement {
   factorSections.appendChild(companyTitle);
   
   const globalTitle = document.createElement('span');
-  globalTitle.className = 'text-xs font-semibold text-gray-400';
+  globalTitle.className = 'text-xs font-semibold text-gray-400 mr-6';
   globalTitle.textContent = 'GLOBAL';
   factorSections.appendChild(globalTitle);
   
@@ -157,7 +165,7 @@ export function createFactorsDisplay(factors: GameFactors): HTMLElement {
   
   // Add a divider between the two sections
   const divider = document.createElement('div');
-  divider.className = 'h-28 border-l border-gray-600 mx-2';
+  divider.className = 'h-12 border-l border-gray-600 mx-2';
   
   factorsContainer.appendChild(companyFactors);
   factorsContainer.appendChild(divider);
@@ -260,13 +268,10 @@ export function createDecisionScreen(
   }
   
   const container = document.createElement('div');
-  container.className = 'flex flex-col min-h-screen p-4 py-8';
+  container.className = 'flex flex-col min-h-screen p-2 py-4';
   
   const header = document.createElement('div');
-  header.className = 'mb-4';
-  
-  const statusContainer = document.createElement('div');
-  statusContainer.className = 'flex justify-between mb-3';
+  // header.className = 'mb-4';
   
   // const turnCounter = document.createElement('div');
   // turnCounter.textContent = `Turn: ${turn}/12`;
@@ -693,7 +698,7 @@ export function createEventScreen(gameState: GameState, onContinue: () => void):
   const { turn, factors, currentEvent, currentPhase } = gameState;
   
   const container = document.createElement('div');
-  container.className = 'flex flex-col min-h-screen p-4 py-8';
+  container.className = 'flex flex-col min-h-screen p-2 py-4';
   
   const header = document.createElement('div');
   header.className = 'mb-4';

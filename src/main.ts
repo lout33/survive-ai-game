@@ -26,20 +26,6 @@ let gameState: GameState = initializeGame()
 let infoModalVisible = false
 let toastTimeout: number | null = null
 
-// Creates and adds the info button to the page
-function addInfoButton() {
-  const infoButtonContainer = document.createElement('div')
-  infoButtonContainer.className = 'fixed top-4 right-4 z-40'
-  
-  const infoButton = createButton('?', () => {
-    infoModalVisible = true
-    showInfoModal()
-  }, 'rounded-full w-10 h-10 font-bold bg-blue-800')
-  
-  infoButtonContainer.appendChild(infoButton)
-  document.body.appendChild(infoButtonContainer)
-}
-
 // Shows the info modal
 function showInfoModal() {
   if (!infoModalVisible) return
@@ -157,11 +143,6 @@ function render() {
     default:
       console.error('Unknown screen state:', gameState.currentScreen)
   }
-  
-  // Add info button if it doesn't exist
-  if (!document.querySelector('.fixed.top-4.right-4')) {
-    addInfoButton()
-  }
 }
 
 // Handle window resize
@@ -244,3 +225,12 @@ function showFeedbackToast(message: string) {
 
 // Initial render
 render()
+
+// Event delegation for info button
+document.addEventListener('click', (event) => {
+  const target = event.target as HTMLElement;
+  if (target.id === 'game-info-button' || target.closest('#game-info-button')) {
+    infoModalVisible = true;
+    showInfoModal();
+  }
+});
