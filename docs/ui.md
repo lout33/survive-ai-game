@@ -643,7 +643,7 @@ function showFeedbackToast(message: string) {
 ```
 +------------------------------+
 |                              |
-|  SURVIVE THE AI FUTURE: CEO  |
+|  SURVIVE THE AI FUTURE       |
 |                              |
 +------------------------------+
 |                              |
