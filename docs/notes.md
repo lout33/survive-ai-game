@@ -84,3 +84,18 @@ Add pop-up "AI Insights" after key decisions, explaining real-world parallels (e
 
 ------
 
+Story:
+Story 1:
+You are a survivor in a post-apocalyptic world ravaged by an AI catastrophe. After discovering a mysterious Quantum Chrono-Device, you leap back to the year 2025 to relive the 12 critical years of AI development. 
+
+
+
+Story 2: game 2
+You are a soul,entity,person in post-apocalyptic,utopia,dystopia,heaven,hell,torture,pleasure, world that ai and humans have created. You got a Chrono Computer that allows you to travel back in time to the year 2025. So you decide to go back in time to the year 2025 and change the course of history.  you are in charge of a AI company that originally doomed humanity.
+
+The idea is that the future is aleatory, so you can be a entity,soul,person... and in x future,
+but for some reason you want to change the future, so you travel back in time to the year 2025 where you are in charge of a AI company that originally doomed humanity.
+
+Story 3: 
+You are the CEO of a AI company so you have to navigate the company through 3 phases:
+
