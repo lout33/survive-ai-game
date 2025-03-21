@@ -293,15 +293,88 @@ export function createDecisionScreen(
   const cardContent = document.createElement('div');
   cardContent.className = 'flex flex-col h-full';
   
-  // Toast notifications will be inserted here dynamically
+  // Create a container for the ASCII art display
+  const asciiContainer = document.createElement('div');
+  asciiContainer.className = 'mb-6 mx-auto flex items-center justify-center';
+  asciiContainer.style.width = '320px';
+  asciiContainer.style.height = '320px';
+  asciiContainer.style.maxWidth = '90vw';
+  asciiContainer.style.position = 'relative';
   
-  // Add image below any potential toast notifications
-  const cardImage = document.createElement('img');
-  cardImage.src = './random-ai-boom.png';
-  cardImage.className = 'w-full h-auto mb-6 rounded-lg mx-auto';
-  cardImage.alt = 'AI illustration';
-  cardImage.style.maxWidth = '400px';
-  cardContent.appendChild(cardImage);
+  // Replace image with ASCII art from text file
+  const asciiArtContainer = document.createElement('pre');
+  asciiArtContainer.className = 'font-mono text-green-500 bg-black p-2 rounded-lg';
+  asciiArtContainer.style.margin = '0';
+  asciiArtContainer.style.width = '100%';
+  asciiArtContainer.style.height = '100%';
+  asciiArtContainer.style.fontSize = '3px';
+  asciiArtContainer.style.lineHeight = '1';
+  asciiArtContainer.style.display = 'flex';
+  asciiArtContainer.style.alignItems = 'center';
+  asciiArtContainer.style.justifyContent = 'center';
+  asciiArtContainer.style.transformOrigin = 'center';
+  asciiArtContainer.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.2)';
+  asciiArtContainer.style.overflow = 'hidden';
+  
+  // Set the path to load based on the current phase and event/decision type
+  const phaseName = gameState.currentPhase ? gameState.currentPhase.toLowerCase() : 'growth';
+  const cardType = 'decision'; // Since this is the decision screen
+  
+  // Extract card number from the card ID (e.g., "infancy_decision_3" -> "3")
+  let cardNumber = '1'; // Default fallback
+  
+  if (currentCard && currentCard.id) {
+    const idParts = currentCard.id.split('_');
+    if (idParts.length > 2) {
+      cardNumber = idParts[idParts.length - 1]; // Get the last part (the number)
+    }
+  }
+  
+  const asciiFilePath = `./ascii_output_improved2/${phaseName}_${cardType}_${cardNumber}.txt`;
+  console.log(`Loading ASCII art: ${asciiFilePath}`);
+
+  // Fetch the ASCII art content from the file
+  fetch(asciiFilePath)
+    .then(response => response.text())
+    .then(text => {
+      // Create an inner container that will hold the ASCII art content
+      const contentWrapper = document.createElement('div');
+      contentWrapper.style.whiteSpace = 'pre';
+      contentWrapper.style.display = 'block';
+      contentWrapper.style.width = 'fit-content';
+      contentWrapper.style.margin = 'auto';
+      
+      // Set the ASCII text content
+      const formattedText = document.createTextNode(text);
+      contentWrapper.appendChild(formattedText);
+      
+      // Clear and append the new content
+      asciiArtContainer.innerHTML = '';
+      asciiArtContainer.appendChild(contentWrapper);
+      
+      // Dynamically adjust font size based on content dimensions
+      // First get the width and height of the text content
+      const contentWidth = contentWrapper.scrollWidth;
+      const contentHeight = contentWrapper.scrollHeight;
+      const containerWidth = asciiContainer.clientWidth;
+      const containerHeight = asciiContainer.clientHeight;
+      
+      // Calculate the scale needed to fit the content
+      const widthRatio = containerWidth / contentWidth;
+      const heightRatio = containerHeight / contentHeight;
+      const scale = Math.min(widthRatio, heightRatio) * 0.95; // 95% of the max scale to add some margin
+      
+      // Apply the calculated scale
+      contentWrapper.style.transform = `scale(${scale})`;
+      contentWrapper.style.transformOrigin = 'center';
+    })
+    .catch(error => {
+      console.error('Failed to load ASCII art:', error);
+      asciiArtContainer.textContent = 'ASCII art unavailable';
+    });
+  
+  asciiContainer.appendChild(asciiArtContainer);
+  cardContent.appendChild(asciiContainer);
   
   const scenario = document.createElement('p');
   scenario.className = 'mb-6 text-lg';
@@ -726,15 +799,88 @@ export function createEventScreen(gameState: GameState, onContinue: () => void):
   const cardContent = document.createElement('div');
   cardContent.className = 'flex flex-col h-full';
   
-  // Toast notifications will be inserted here dynamically
+  // Create a container for the ASCII art display
+  const asciiContainer = document.createElement('div');
+  asciiContainer.className = 'mb-6 mx-auto flex items-center justify-center';
+  asciiContainer.style.width = '320px';
+  asciiContainer.style.height = '320px';
+  asciiContainer.style.maxWidth = '90vw';
+  asciiContainer.style.position = 'relative';
   
-  // Add image below any potential toast notifications
-  const cardImage = document.createElement('img');
-  cardImage.src = './random-ai-boom.png';
-  cardImage.className = 'w-full h-auto mb-6 rounded-lg mx-auto';
-  cardImage.alt = 'AI illustration';
-  cardImage.style.maxWidth = '400px';
-  cardContent.appendChild(cardImage);
+  // Replace image with ASCII art from text file
+  const asciiArtContainer = document.createElement('pre');
+  asciiArtContainer.className = 'font-mono text-green-500 bg-black p-2 rounded-lg';
+  asciiArtContainer.style.margin = '0';
+  asciiArtContainer.style.width = '100%';
+  asciiArtContainer.style.height = '100%';
+  asciiArtContainer.style.fontSize = '3px';
+  asciiArtContainer.style.lineHeight = '1';
+  asciiArtContainer.style.display = 'flex';
+  asciiArtContainer.style.alignItems = 'center';
+  asciiArtContainer.style.justifyContent = 'center';
+  asciiArtContainer.style.transformOrigin = 'center';
+  asciiArtContainer.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.2)';
+  asciiArtContainer.style.overflow = 'hidden';
+  
+  // Set the path to load based on the current phase and event/decision type
+  const phaseName = currentPhase ? currentPhase.toLowerCase() : 'growth';
+  const cardType = 'event'; // Since this is the event screen
+  
+  // Extract card number from the card ID (e.g., "infancy_event_3" -> "3")
+  let cardNumber = '1'; // Default fallback
+  
+  if (currentEvent && currentEvent.id) {
+    const idParts = currentEvent.id.split('_');
+    if (idParts.length > 2) {
+      cardNumber = idParts[idParts.length - 1]; // Get the last part (the number)
+    }
+  }
+  
+  const asciiFilePath = `./ascii_output_improved2/${phaseName}_${cardType}_${cardNumber}.txt`;
+  console.log(`Loading ASCII art: ${asciiFilePath}`);
+  
+  // Fetch the ASCII art content from the file
+  fetch(asciiFilePath)
+    .then(response => response.text())
+    .then(text => {
+      // Create an inner container that will hold the ASCII art content
+      const contentWrapper = document.createElement('div');
+      contentWrapper.style.whiteSpace = 'pre';
+      contentWrapper.style.display = 'block';
+      contentWrapper.style.width = 'fit-content';
+      contentWrapper.style.margin = 'auto';
+      
+      // Set the ASCII text content
+      const formattedText = document.createTextNode(text);
+      contentWrapper.appendChild(formattedText);
+      
+      // Clear and append the new content
+      asciiArtContainer.innerHTML = '';
+      asciiArtContainer.appendChild(contentWrapper);
+      
+      // Dynamically adjust font size based on content dimensions
+      // First get the width and height of the text content
+      const contentWidth = contentWrapper.scrollWidth;
+      const contentHeight = contentWrapper.scrollHeight;
+      const containerWidth = asciiContainer.clientWidth;
+      const containerHeight = asciiContainer.clientHeight;
+      
+      // Calculate the scale needed to fit the content
+      const widthRatio = containerWidth / contentWidth;
+      const heightRatio = containerHeight / contentHeight;
+      const scale = Math.min(widthRatio, heightRatio) * 0.95; // 95% of the max scale to add some margin
+      
+      // Apply the calculated scale
+      contentWrapper.style.transform = `scale(${scale})`;
+      contentWrapper.style.transformOrigin = 'center';
+    })
+    .catch(error => {
+      console.error('Failed to load ASCII art:', error);
+      asciiArtContainer.textContent = 'ASCII art unavailable';
+    });
+  
+  asciiContainer.appendChild(asciiArtContainer);
+  cardContent.appendChild(asciiContainer);
   
   if (currentEvent) {
     const eventTitle = document.createElement('h2');
