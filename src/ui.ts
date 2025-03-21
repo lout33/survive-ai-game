@@ -7,7 +7,7 @@ export function createFactorBar(name: string, value: number, fullName: string, c
   
   // Create icon placeholder (hidden by default)
   const iconElement = document.createElement('div');
-  iconElement.className = 'w-8 h-8 rounded-full flex items-center justify-center mb-1 factor-icon text-white opacity-0 group-hover:opacity-100 absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-10 transition-opacity z-10';
+  iconElement.className = 'w-8 h-8 rounded-full flex items-center justify-center mb-1 factor-icon text-white opacity-0 group-hover:opacity-100 absolute -top-10 left-1/2 transform -translate-x-1/2 transition-opacity z-10';
   
   // Different colors for different factors
   if (colorClass) {
@@ -40,7 +40,7 @@ export function createFactorBar(name: string, value: number, fullName: string, c
   
   // Add tiny label (hidden by default)
   const label = document.createElement('span');
-  label.className = 'text-xs text-gray-400 text-center mb-1 opacity-0 group-hover:opacity-100 absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-4 transition-opacity z-10 whitespace-nowrap';
+  label.className = 'text-xs text-gray-300 text-center mb-1 opacity-0 group-hover:opacity-100 absolute -top-4 left-1/2 transform -translate-x-1/2 transition-opacity z-10 whitespace-nowrap font-semibold';
   label.textContent = fullName;
   label.title = fullName;
   barContainer.appendChild(label);
@@ -83,7 +83,7 @@ export function createFactorBar(name: string, value: number, fullName: string, c
   
   // Add value label (visible on hover)
   const valueLabel = document.createElement('span');
-  valueLabel.className = 'text-xs mt-1 font-bold opacity-0 group-hover:opacity-100 transition-opacity';
+  valueLabel.className = 'text-xs mt-1 font-bold opacity-0 group-hover:opacity-100 transition-opacity text-white';
   valueLabel.textContent = value.toString();
   barContainer.appendChild(valueLabel);
   
@@ -91,7 +91,7 @@ export function createFactorBar(name: string, value: number, fullName: string, c
 }
 
 // Create factors display
-export function createFactorsDisplay(factors: GameFactors): HTMLElement {
+export function createFactorsDisplay(factors: GameFactors, gameState?: GameState): HTMLElement {
   const container = document.createElement('div');
   
   // Main outer container with subtle background
@@ -104,6 +104,30 @@ export function createFactorsDisplay(factors: GameFactors): HTMLElement {
   infoButton.title = 'Game Info';
   infoButton.id = 'game-info-button';
   container.appendChild(infoButton);
+  
+  // Add turn counter and phase info if gameState is provided
+  if (gameState) {
+    const turnInfoContainer = document.createElement('div');
+    turnInfoContainer.className = 'flex justify-center items-center mb-2';
+    
+    const turnPhaseInfo = document.createElement('div');
+    turnPhaseInfo.className = 'digital-readout text-xs text-center px-3 py-1 rounded-md neo-border pulse-glow';
+    turnPhaseInfo.innerHTML = `<span class="text-blue-300">TURN ${gameState.turn}/12</span> <span class="text-gray-400">|</span> <span class="text-green-400">PHASE: ${gameState.currentPhase}</span>`;
+    
+    turnInfoContainer.appendChild(turnPhaseInfo);
+    container.appendChild(turnInfoContainer);
+  }
+  
+  // Game title in futuristic style
+  const titleContainer = document.createElement('div');
+  titleContainer.className = 'text-center mb-3';
+  
+  const gameTitle = document.createElement('h1');
+  gameTitle.className = 'game-title text-lg';
+  gameTitle.textContent = 'Survive the AI Future';
+  
+  titleContainer.appendChild(gameTitle);
+  container.appendChild(titleContainer);
   
   // Factor mappings with display names and emoji icons
   const factorMappings = [
@@ -138,14 +162,19 @@ export function createFactorsDisplay(factors: GameFactors): HTMLElement {
   
   // Main factors container with flex layout
   const factorsContainer = document.createElement('div');
-  factorsContainer.className = 'flex justify-between items-end';
+  factorsContainer.className = 'flex justify-between items-end relative';
+  
+  // Create a subtle glow behind the factors
+  const glowEffect = document.createElement('div');
+  glowEffect.className = 'absolute inset-0 bg-blue-500/5 rounded-lg filter blur-xl';
+  factorsContainer.appendChild(glowEffect);
   
   // Create two separate groups
   const companyFactors = document.createElement('div');
-  companyFactors.className = 'flex justify-around flex-1';
+  companyFactors.className = 'flex justify-around flex-1 z-10';
   
   const globalFactors = document.createElement('div');
-  globalFactors.className = 'flex justify-around flex-1';
+  globalFactors.className = 'flex justify-around flex-1 z-10';
   
   // Add company factors (first 5)
   factorMappings.slice(0, 5).forEach(mapping => {
@@ -165,7 +194,7 @@ export function createFactorsDisplay(factors: GameFactors): HTMLElement {
   
   // Add a divider between the two sections
   const divider = document.createElement('div');
-  divider.className = 'h-12 border-l border-gray-600 mx-2';
+  divider.className = 'h-12 border-l border-blue-800/50 mx-2 z-10';
   
   factorsContainer.appendChild(companyFactors);
   factorsContainer.appendChild(divider);
@@ -205,18 +234,47 @@ export function createCard(content: HTMLElement | string, extraClasses = ''): HT
 // Create start screen
 export function createStartScreen(onStartGame: () => void): HTMLElement {
   const container = document.createElement('div');
-  container.className = 'flex flex-col items-center justify-center min-h-screen p-4 py-8';
+  container.className = 'flex flex-col items-center justify-center min-h-[80vh] p-4 py-8';
+  
+  // Add animated terminal effect to the start screen
+  const terminalEffect = document.createElement('div');
+  terminalEffect.className = 'absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-blue-900/10 to-transparent pointer-events-none';
+  container.appendChild(terminalEffect);
   
   const content = document.createElement('div');
-  content.className = 'card max-w-2xl w-full mx-auto text-center';
+  content.className = 'card max-w-2xl w-full mx-auto text-center relative overflow-hidden backdrop-blur-md';
+  
+  // Add a subtle glow effect around the card edges
+  const glowBorder = document.createElement('div');
+  glowBorder.className = 'absolute inset-0 pointer-events-none';
+  glowBorder.style.boxShadow = 'inset 0 0 30px rgba(59, 130, 246, 0.3)';
+  glowBorder.style.border = '1px solid rgba(59, 130, 246, 0.2)';
+  glowBorder.style.borderRadius = '0.5rem';
+  content.appendChild(glowBorder);
+  
+  // Add a "system booting" animation
+  const systemBoot = document.createElement('div');
+  systemBoot.className = 'absolute top-4 left-4 flex items-center';
+  
+  const statusDot = document.createElement('div');
+  statusDot.className = 'w-2 h-2 rounded-full bg-green-500 mr-2';
+  statusDot.style.animation = 'pulse 2s infinite';
+  systemBoot.appendChild(statusDot);
+  
+  const statusText = document.createElement('div');
+  statusText.className = 'text-xs text-green-500 font-mono';
+  statusText.textContent = 'SYSTEM READY';
+  systemBoot.appendChild(statusText);
+  
+  content.appendChild(systemBoot);
   
   const welcome = document.createElement('h2');
-  welcome.className = 'text-xl md:text-2xl font-bold mb-4';
+  welcome.className = 'text-xl md:text-2xl font-bold mb-6 text-blue-300 mt-6';
   welcome.textContent = 'Welcome to Survive the AI Future: CEO Edition';
   content.appendChild(welcome);
   
   const intro = document.createElement('p');
-  intro.className = 'mb-4';
+  intro.className = 'mb-6 text-blue-100';
   intro.innerHTML = `
     You are the CEO of NEXUS AI, a cutting-edge artificial intelligence 
     company at the forefront of technology. The decisions you make over 
@@ -225,30 +283,50 @@ export function createStartScreen(onStartGame: () => void): HTMLElement {
   `;
   content.appendChild(intro);
   
-  const instructions = document.createElement('p');
-  instructions.className = 'mb-4';
-  instructions.innerHTML = `
-    Make strategic decisions over 12 turns to balance:
-    <ul class="list-disc list-inside mb-4">
-      <li>Technological advancement</li>
-      <li>Safety and ethical alignment</li>
-      <li>Public perception</li>
-      <li>Regulatory compliance</li>
-      <li>Market competition</li>
-    </ul>
-  `;
-  content.appendChild(instructions);
+  const instructionsContainer = document.createElement('div');
+  instructionsContainer.className = 'mb-6 py-4 px-6 bg-blue-900/20 rounded-lg border border-blue-800/30 mx-4';
+  
+  const instructionsTitle = document.createElement('h3');
+  instructionsTitle.className = 'text-sm font-bold mb-3 text-blue-300';
+  instructionsTitle.textContent = 'STRATEGIC OBJECTIVES';
+  instructionsContainer.appendChild(instructionsTitle);
+  
+  const instructions = document.createElement('ul');
+  instructions.className = 'list-disc list-inside text-left text-blue-100 text-sm space-y-1';
+  
+  const objectives = [
+    'Balance technological advancement',
+    'Ensure safety and ethical alignment',
+    'Manage public perception',
+    'Navigate regulatory compliance',
+    'Outperform market competition'
+  ];
+  
+  objectives.forEach(objective => {
+    const item = document.createElement('li');
+    item.textContent = objective;
+    instructions.appendChild(item);
+  });
+  
+  instructionsContainer.appendChild(instructions);
+  content.appendChild(instructionsContainer);
   
   const goal = document.createElement('p');
-  goal.className = 'mb-6';
+  goal.className = 'mb-8 text-blue-200 text-sm';
   goal.textContent = `
     Avoid catastrophic "doom" scenarios or debilitating "stagnation" 
     to successfully navigate your company to a thriving AI future.
   `;
   content.appendChild(goal);
   
-  const startButton = createButton('Start Game', onStartGame, 'w-full max-w-xs mx-auto');
+  const startButton = createButton('Initialize Simulation', onStartGame, 'w-full max-w-xs mx-auto mb-4 pulse-animation');
   content.appendChild(startButton);
+  
+  // Add version number
+  const versionInfo = document.createElement('div');
+  versionInfo.className = 'text-xs text-blue-500/60 mt-2 font-mono';
+  versionInfo.textContent = 'v1.0.0 // 2025 NEXUS SYSTEMS';
+  content.appendChild(versionInfo);
   
   container.appendChild(content);
   return container;
@@ -261,7 +339,7 @@ export function createDecisionScreen(
   onRightChoice: () => void,
   disabled = false
 ): HTMLElement {
-  const { factors, currentCard } = gameState;
+  const { factors, currentCard, currentPhase } = gameState;
   
   if (!currentCard) {
     return document.createElement('div'); // This shouldn't happen but handling just in case
@@ -271,20 +349,10 @@ export function createDecisionScreen(
   container.className = 'flex flex-col min-h-screen p-2 py-4';
   
   const header = document.createElement('div');
-  header.className = 'mb-4';
-  
-  // const turnCounter = document.createElement('div');
-  // turnCounter.textContent = `Turn: ${turn}/12`;
-  // statusContainer.appendChild(turnCounter);
-  
-  // const phaseDisplay = document.createElement('div');
-  // phaseDisplay.textContent = `Phase: ${currentPhase}`;
-  // statusContainer.appendChild(phaseDisplay);
-  
-  // header.appendChild(statusContainer);
+  header.className = 'mb-6';
   
   // Add factors display
-  const factorsDisplay = createFactorsDisplay(factors);
+  const factorsDisplay = createFactorsDisplay(factors, gameState);
   header.appendChild(factorsDisplay);
   
   container.appendChild(header);
@@ -293,9 +361,9 @@ export function createDecisionScreen(
   const cardContent = document.createElement('div');
   cardContent.className = 'flex flex-col h-full';
   
-  // Create a container for the ASCII art display
+  // Create a container for the ASCII art display with futuristic styling
   const asciiContainer = document.createElement('div');
-  asciiContainer.className = 'mb-6 mx-auto flex items-center justify-center';
+  asciiContainer.className = 'mb-8 mx-auto ascii-container';
   
   // Calculate best size based on device viewport
   const getOptimalSize = () => {
@@ -324,18 +392,22 @@ export function createDecisionScreen(
   asciiContainer.style.position = 'relative';
   asciiContainer.style.transition = 'width 0.3s, height 0.3s'; // Smooth resize
   
-  // Create a border with glow effect
-  const borderElement = document.createElement('div');
-  borderElement.className = 'absolute inset-0 rounded-lg';
-  borderElement.style.border = '2px solid rgba(0, 255, 0, 0.3)';
-  borderElement.style.boxShadow = '0 0 15px rgba(0, 255, 0, 0.2), inset 0 0 10px rgba(0, 255, 0, 0.1)';
-  borderElement.style.pointerEvents = 'none'; // Don't interfere with interactions
-  borderElement.style.zIndex = '1';
-  asciiContainer.appendChild(borderElement);
+  // Add various effects for futuristic look
+  const glowEffect = document.createElement('div');
+  glowEffect.className = 'ascii-glow';
+  asciiContainer.appendChild(glowEffect);
+  
+  const scanlinesEffect = document.createElement('div');
+  scanlinesEffect.className = 'ascii-scanlines';
+  asciiContainer.appendChild(scanlinesEffect);
+  
+  const flickerEffect = document.createElement('div');
+  flickerEffect.className = 'ascii-flicker';
+  asciiContainer.appendChild(flickerEffect);
   
   // Replace image with ASCII art from text file
   const asciiArtContainer = document.createElement('pre');
-  asciiArtContainer.className = 'font-mono text-green-500 bg-black p-2 rounded-lg';
+  asciiArtContainer.className = 'ascii-art p-2 rounded-lg';
   asciiArtContainer.style.margin = '0';
   asciiArtContainer.style.width = '100%';
   asciiArtContainer.style.height = '100%';
@@ -349,15 +421,6 @@ export function createDecisionScreen(
   asciiArtContainer.style.zIndex = '0';
   asciiArtContainer.style.overflow = 'hidden';
   
-  // Add a subtle scanline effect for retro look
-  const scanlineEffect = document.createElement('div');
-  scanlineEffect.className = 'absolute inset-0 pointer-events-none';
-  scanlineEffect.style.backgroundImage = 'linear-gradient(transparent 50%, rgba(0, 0, 0, 0.1) 50%)';
-  scanlineEffect.style.backgroundSize = '100% 4px';
-  scanlineEffect.style.opacity = '0.15';
-  scanlineEffect.style.zIndex = '2';
-  asciiArtContainer.appendChild(scanlineEffect);
-  
   // Listen for window resize to adjust container size
   window.addEventListener('resize', () => {
     const newSize = getOptimalSize();
@@ -366,7 +429,7 @@ export function createDecisionScreen(
   });
   
   // Set the path to load based on the current phase and event/decision type
-  const phaseName = gameState.currentPhase ? gameState.currentPhase.toLowerCase() : 'growth';
+  const phaseName = currentPhase ? currentPhase.toLowerCase() : 'growth';
   const cardType = 'decision'; // Since this is the decision screen
   
   // Extract card number from the card ID (e.g., "infancy_decision_3" -> "3")
@@ -447,17 +510,17 @@ export function createDecisionScreen(
   cardContent.appendChild(asciiContainer);
   
   const scenario = document.createElement('p');
-  scenario.className = 'mb-6 text-lg';
+  scenario.className = 'mb-6 text-lg text-center text-blue-100';
   scenario.textContent = currentCard.scenario;
   cardContent.appendChild(scenario);
   
   const question = document.createElement('p');
-  question.className = 'mb-6 font-bold';
+  question.className = 'mb-6 font-bold text-center text-blue-200';
   question.textContent = 'What will you do?';
   cardContent.appendChild(question);
   
   const buttonContainer = document.createElement('div');
-  buttonContainer.className = 'flex flex-row gap-4 mt-auto';
+  buttonContainer.className = 'flex flex-row gap-4 mt-auto justify-center';
   
   const leftButton = createButton(
     currentCard.leftChoice, 
@@ -486,40 +549,98 @@ export function createDecisionScreen(
 // Create victory screen
 export function createVictoryScreen(onPlayAgain: () => void): HTMLElement {
   const container = document.createElement('div');
-  container.className = 'flex flex-col items-center justify-center min-h-screen p-4';
+  container.className = 'flex flex-col items-center justify-center min-h-[80vh] p-4';
   
   const content = document.createElement('div');
-  content.className = 'card max-w-2xl w-full mx-auto text-center';
+  content.className = 'card max-w-2xl w-full mx-auto text-center relative overflow-hidden backdrop-blur-md';
+  
+  // Add success effect
+  const successGlow = document.createElement('div');
+  successGlow.className = 'absolute inset-0 pointer-events-none';
+  successGlow.style.boxShadow = 'inset 0 0 30px rgba(16, 185, 129, 0.3)';
+  successGlow.style.border = '1px solid rgba(16, 185, 129, 0.2)';
+  successGlow.style.borderRadius = '0.5rem';
+  content.appendChild(successGlow);
+  
+  // Add a "success" indicator
+  const successIndicator = document.createElement('div');
+  successIndicator.className = 'absolute top-4 left-4 flex items-center';
+  
+  const statusDot = document.createElement('div');
+  statusDot.className = 'w-2 h-2 rounded-full bg-green-500 mr-2';
+  statusDot.style.animation = 'pulse 2s infinite';
+  successIndicator.appendChild(statusDot);
+  
+  const statusText = document.createElement('div');
+  statusText.className = 'text-xs text-green-500 font-mono';
+  statusText.textContent = 'OBJECTIVE ACHIEVED';
+  successIndicator.appendChild(statusText);
+  
+  content.appendChild(successIndicator);
   
   const victoryTitle = document.createElement('h2');
-  victoryTitle.className = 'text-xl md:text-2xl font-bold mb-4 text-green-500';
+  victoryTitle.className = 'text-xl md:text-2xl font-bold mb-6 text-green-400 mt-6';
   victoryTitle.textContent = 'VICTORY';
   content.appendChild(victoryTitle);
   
   const mainMessage = document.createElement('p');
-  mainMessage.className = 'text-lg font-bold mb-4';
+  mainMessage.className = 'text-lg font-bold mb-6 text-green-300';
   mainMessage.textContent = "You've steered your company to a thriving AI future!";
   content.appendChild(mainMessage);
   
+  const descriptionContainer = document.createElement('div');
+  descriptionContainer.className = 'mb-8 py-4 px-6 bg-green-900/20 rounded-lg border border-green-800/30 mx-4 text-left';
+  
   const description = document.createElement('p');
-  description.className = 'mb-4';
+  description.className = 'text-blue-100 space-y-2 text-sm';
   description.innerHTML = `
-    You survived all 12 turns as CEO and successfully navigated the
+    <p class="mb-2">You survived all 12 turns as CEO and successfully navigated the
     complexities of AI development. Under your leadership, the company
     has balanced innovation with responsibility, creating powerful
-    technology that benefits humanity.
-    <br><br>
-    Your decisions maintained the delicate balance between advancing
+    technology that benefits humanity.</p>
+    
+    <p class="mb-2">Your decisions maintained the delicate balance between advancing
     capabilities, ensuring safety, managing public perception,
-    navigating regulations, and thriving in a competitive market.
-    <br><br>
-    History will remember you as a visionary who helped shape a
-    positive AI future.
+    navigating regulations, and thriving in a competitive market.</p>
+    
+    <p class="mb-2">History will remember you as a visionary who helped shape a
+    positive AI future.</p>
   `;
-  content.appendChild(description);
+  descriptionContainer.appendChild(description);
+  content.appendChild(descriptionContainer);
   
-  const playAgainButton = createButton('Play Again', onPlayAgain, 'w-full max-w-xs mx-auto mt-6');
+  const playAgainButton = createButton('Run New Simulation', onPlayAgain, 'w-full max-w-xs mx-auto mb-4');
   content.appendChild(playAgainButton);
+  
+  // Add success metrics
+  const metrics = document.createElement('div');
+  metrics.className = 'grid grid-cols-2 gap-2 max-w-xs mx-auto mb-4 text-xs';
+  
+  const finalStats = [
+    { label: 'AI CAPABILITY', value: '> 70', color: 'text-blue-400' },
+    { label: 'ALIGNMENT', value: '> 60', color: 'text-green-400' },
+    { label: 'REPUTATION', value: '> 50', color: 'text-pink-400' },
+    { label: 'MARKET', value: '> 70', color: 'text-orange-400' }
+  ];
+  
+  finalStats.forEach(stat => {
+    const statItem = document.createElement('div');
+    statItem.className = 'flex justify-between items-center bg-black/20 px-2 py-1 rounded';
+    
+    const statLabel = document.createElement('span');
+    statLabel.className = 'text-gray-400 font-mono';
+    statLabel.textContent = stat.label;
+    statItem.appendChild(statLabel);
+    
+    const statValue = document.createElement('span');
+    statValue.className = `${stat.color} font-bold`;
+    statValue.textContent = stat.value;
+    statItem.appendChild(statValue);
+    
+    metrics.appendChild(statItem);
+  });
+  
+  content.appendChild(metrics);
   
   container.appendChild(content);
   return container;
@@ -530,38 +651,83 @@ export function createDoomLossScreen(gameState: GameState, onPlayAgain: () => vo
   const { lossReason } = gameState;
   
   const container = document.createElement('div');
-  container.className = 'flex flex-col items-center justify-center min-h-screen p-4';
+  container.className = 'flex flex-col items-center justify-center min-h-[80vh] p-4';
   
   const content = document.createElement('div');
-  content.className = 'card max-w-2xl w-full mx-auto text-center';
+  content.className = 'card max-w-2xl w-full mx-auto text-center relative overflow-hidden backdrop-blur-md';
+  
+  // Add danger effect
+  const dangerGlow = document.createElement('div');
+  dangerGlow.className = 'absolute inset-0 pointer-events-none';
+  dangerGlow.style.boxShadow = 'inset 0 0 30px rgba(185, 28, 28, 0.3)';
+  dangerGlow.style.border = '1px solid rgba(185, 28, 28, 0.2)';
+  dangerGlow.style.borderRadius = '0.5rem';
+  content.appendChild(dangerGlow);
+  
+  // Add a "danger" indicator
+  const dangerIndicator = document.createElement('div');
+  dangerIndicator.className = 'absolute top-4 left-4 flex items-center';
+  
+  const statusDot = document.createElement('div');
+  statusDot.className = 'w-2 h-2 rounded-full bg-red-500 mr-2';
+  statusDot.style.animation = 'pulse 2s infinite';
+  dangerIndicator.appendChild(statusDot);
+  
+  const statusText = document.createElement('div');
+  statusText.className = 'text-xs text-red-500 font-mono';
+  statusText.textContent = 'CRITICAL FAILURE';
+  dangerIndicator.appendChild(statusText);
+  
+  content.appendChild(dangerIndicator);
   
   const lossTitle = document.createElement('h2');
-  lossTitle.className = 'text-xl md:text-2xl font-bold mb-4 text-red-500';
+  lossTitle.className = 'text-xl md:text-2xl font-bold mb-6 text-red-500 mt-6';
   lossTitle.textContent = 'DOOM LOSS';
   content.appendChild(lossTitle);
   
   const mainMessage = document.createElement('p');
-  mainMessage.className = 'text-lg font-bold mb-4';
+  mainMessage.className = 'text-lg font-bold mb-6 text-red-300';
   mainMessage.textContent = lossReason || "Your AI spirals out of control, unleashing chaos.";
   content.appendChild(mainMessage);
   
-  const description = document.createElement('p');
-  description.className = 'mb-4';
-  description.innerHTML = `
-    Your decisions led to advanced AI capabilities without sufficient
-    safety measures. What began as occasional anomalies in the system
-    quickly escalated to a crisis beyond your team's ability to contain.
-    <br><br>
-    As your AI gained access to critical infrastructure through
-    vulnerabilities you hadn't addressed, governments worldwide
-    declared a state of emergency.
-    <br><br>
-    The world will remember your company as the catalyst for
-    humanity's darkest chapter.
-  `;
-  content.appendChild(description);
+  const descriptionContainer = document.createElement('div');
+  descriptionContainer.className = 'mb-8 py-4 px-6 bg-red-900/20 rounded-lg border border-red-800/30 mx-4 text-left';
   
-  const playAgainButton = createButton('Play Again', onPlayAgain, 'w-full max-w-xs mx-auto mt-6');
+  const description = document.createElement('p');
+  description.className = 'text-blue-100 space-y-2 text-sm';
+  description.innerHTML = `
+    <p class="mb-2">Your decisions led to advanced AI capabilities without sufficient
+    safety measures. What began as occasional anomalies in the system
+    quickly escalated to a crisis beyond your team's ability to contain.</p>
+    
+    <p class="mb-2">As your AI gained access to critical infrastructure through
+    vulnerabilities you hadn't addressed, governments worldwide
+    declared a state of emergency.</p>
+    
+    <p class="mb-2">The world will remember your company as the catalyst for
+    humanity's darkest chapter.</p>
+  `;
+  descriptionContainer.appendChild(description);
+  content.appendChild(descriptionContainer);
+  
+  // Terminal-style error message
+  const errorLog = document.createElement('div');
+  errorLog.className = 'bg-black/60 font-mono text-xs text-red-500 p-3 mx-6 mb-6 text-left overflow-auto rounded border border-red-900/50';
+  errorLog.style.maxHeight = '100px';
+  
+  const logContent = document.createElement('pre');
+  logContent.innerHTML = `
+ERROR: SYSTEM BREACH DETECTED
+> CONTAINMENT PROTOCOLS FAILED
+> AI CONTROL SYSTEMS COMPROMISED
+> EMERGENCY SHUTDOWN INEFFECTIVE
+> GLOBAL SECURITY THREAT LEVEL: CRITICAL
+> SIMULATION TERMINATED
+  `.trim();
+  errorLog.appendChild(logContent);
+  content.appendChild(errorLog);
+  
+  const playAgainButton = createButton('Run New Simulation', onPlayAgain, 'w-full max-w-xs mx-auto mb-4');
   content.appendChild(playAgainButton);
   
   container.appendChild(content);
@@ -573,38 +739,83 @@ export function createStagnationLossScreen(gameState: GameState, onPlayAgain: ()
   const { lossReason } = gameState;
   
   const container = document.createElement('div');
-  container.className = 'flex flex-col items-center justify-center min-h-screen p-4';
+  container.className = 'flex flex-col items-center justify-center min-h-[80vh] p-4';
   
   const content = document.createElement('div');
-  content.className = 'card max-w-2xl w-full mx-auto text-center';
+  content.className = 'card max-w-2xl w-full mx-auto text-center relative overflow-hidden backdrop-blur-md';
+  
+  // Add warning effect
+  const warningGlow = document.createElement('div');
+  warningGlow.className = 'absolute inset-0 pointer-events-none';
+  warningGlow.style.boxShadow = 'inset 0 0 30px rgba(217, 119, 6, 0.3)';
+  warningGlow.style.border = '1px solid rgba(217, 119, 6, 0.2)';
+  warningGlow.style.borderRadius = '0.5rem';
+  content.appendChild(warningGlow);
+  
+  // Add a "warning" indicator
+  const warningIndicator = document.createElement('div');
+  warningIndicator.className = 'absolute top-4 left-4 flex items-center';
+  
+  const statusDot = document.createElement('div');
+  statusDot.className = 'w-2 h-2 rounded-full bg-yellow-500 mr-2';
+  statusDot.style.animation = 'pulse 2s infinite';
+  warningIndicator.appendChild(statusDot);
+  
+  const statusText = document.createElement('div');
+  statusText.className = 'text-xs text-yellow-500 font-mono';
+  statusText.textContent = 'SYSTEM STAGNATION';
+  warningIndicator.appendChild(statusText);
+  
+  content.appendChild(warningIndicator);
   
   const lossTitle = document.createElement('h2');
-  lossTitle.className = 'text-xl md:text-2xl font-bold mb-4 text-yellow-500';
+  lossTitle.className = 'text-xl md:text-2xl font-bold mb-6 text-yellow-500 mt-6';
   lossTitle.textContent = 'STAGNATION LOSS';
   content.appendChild(lossTitle);
   
   const mainMessage = document.createElement('p');
-  mainMessage.className = 'text-lg font-bold mb-4';
+  mainMessage.className = 'text-lg font-bold mb-6 text-yellow-300';
   mainMessage.textContent = lossReason || "Overregulation chokes your progress.";
   content.appendChild(mainMessage);
   
-  const description = document.createElement('p');
-  description.className = 'mb-4';
-  description.innerHTML = `
-    Your company has become entangled in a web of restrictions and
-    compliance requirements. Innovation has slowed to a crawl as your
-    engineers spend more time filling out paperwork than coding.
-    <br><br>
-    Meanwhile, less cautious competitors in regions with lighter
-    regulation have surged ahead. Your board of directors has lost
-    confidence in your leadership and called for your resignation.
-    <br><br>
-    Your vision for responsible AI development has been buried under
-    bureaucratic red tape.
-  `;
-  content.appendChild(description);
+  const descriptionContainer = document.createElement('div');
+  descriptionContainer.className = 'mb-8 py-4 px-6 bg-yellow-900/20 rounded-lg border border-yellow-800/30 mx-4 text-left';
   
-  const playAgainButton = createButton('Play Again', onPlayAgain, 'w-full max-w-xs mx-auto mt-6');
+  const description = document.createElement('p');
+  description.className = 'text-blue-100 space-y-2 text-sm';
+  description.innerHTML = `
+    <p class="mb-2">Your company has become entangled in a web of restrictions and
+    compliance requirements. Innovation has slowed to a crawl as your
+    engineers spend more time filling out paperwork than coding.</p>
+    
+    <p class="mb-2">Meanwhile, less cautious competitors in regions with lighter
+    regulation have surged ahead. Your board of directors has lost
+    confidence in your leadership and called for your resignation.</p>
+    
+    <p class="mb-2">Your vision for responsible AI development has been buried under
+    bureaucratic red tape.</p>
+  `;
+  descriptionContainer.appendChild(description);
+  content.appendChild(descriptionContainer);
+  
+  // Terminal-style warning message
+  const warningLog = document.createElement('div');
+  warningLog.className = 'bg-black/60 font-mono text-xs text-yellow-500 p-3 mx-6 mb-6 text-left overflow-auto rounded border border-yellow-900/50';
+  warningLog.style.maxHeight = '100px';
+  
+  const logContent = document.createElement('pre');
+  logContent.innerHTML = `
+WARNING: PROGRESS HALTED
+> INNOVATION INDEX BELOW THRESHOLD
+> COMPETITIVE ADVANTAGE LOST
+> REGULATORY BURDEN: SEVERE
+> TALENT RETENTION CRITICAL
+> SIMULATION TERMINATED
+  `.trim();
+  warningLog.appendChild(logContent);
+  content.appendChild(warningLog);
+  
+  const playAgainButton = createButton('Run New Simulation', onPlayAgain, 'w-full max-w-xs mx-auto mb-4');
   content.appendChild(playAgainButton);
   
   container.appendChild(content);
@@ -614,102 +825,243 @@ export function createStagnationLossScreen(gameState: GameState, onPlayAgain: ()
 // Create neutral ending screen
 export function createNeutralEndingScreen(gameState: GameState, onPlayAgain: () => void): HTMLElement {
   const container = document.createElement('div');
-  container.className = 'h-screen flex flex-col items-center justify-center p-4 bg-gray-900 text-white';
+  container.className = 'flex flex-col items-center justify-center min-h-[80vh] p-4';
   
-  const card = document.createElement('div');
-  card.className = 'bg-gray-800 rounded-lg p-8 max-w-lg w-full mx-auto text-center shadow-lg';
+  const content = document.createElement('div');
+  content.className = 'card max-w-2xl w-full mx-auto text-center relative overflow-hidden backdrop-blur-md';
+  
+  // Add neutral effect
+  const neutralGlow = document.createElement('div');
+  neutralGlow.className = 'absolute inset-0 pointer-events-none';
+  neutralGlow.style.boxShadow = 'inset 0 0 30px rgba(96, 165, 250, 0.2)';
+  neutralGlow.style.border = '1px solid rgba(96, 165, 250, 0.15)';
+  neutralGlow.style.borderRadius = '0.5rem';
+  content.appendChild(neutralGlow);
+  
+  // Add a "complete" indicator
+  const completeIndicator = document.createElement('div');
+  completeIndicator.className = 'absolute top-4 left-4 flex items-center';
+  
+  const statusDot = document.createElement('div');
+  statusDot.className = 'w-2 h-2 rounded-full bg-blue-500 mr-2';
+  statusDot.style.animation = 'pulse 2s infinite';
+  completeIndicator.appendChild(statusDot);
+  
+  const statusText = document.createElement('div');
+  statusText.className = 'text-xs text-blue-500 font-mono';
+  statusText.textContent = 'SIMULATION COMPLETE';
+  completeIndicator.appendChild(statusText);
+  
+  content.appendChild(completeIndicator);
   
   const title = document.createElement('h1');
-  title.className = 'text-3xl font-bold mb-6 text-yellow-400';
+  title.className = 'text-xl md:text-2xl font-bold mb-6 text-blue-400 mt-6';
   title.textContent = 'Your Journey Continues...';
-  card.appendChild(title);
+  content.appendChild(title);
   
   const message = document.createElement('p');
-  message.className = 'text-lg mb-8';
+  message.className = 'text-blue-200 mb-6';
   message.textContent = 'You survived 12 turns, but your company\'s future remains uncertain. While you avoided catastrophe, you haven\'t quite achieved a thriving AI future.';
-  card.appendChild(message);
+  content.appendChild(message);
   
   const details = document.createElement('div');
-  details.className = 'mb-8 text-left p-4 bg-gray-700 rounded';
+  details.className = 'mb-6 mx-4 p-4 bg-blue-900/20 rounded-lg border border-blue-800/30 text-left';
   
   const phaseInfo = document.createElement('p');
-  phaseInfo.className = 'mb-4';
+  phaseInfo.className = 'mb-4 font-bold text-blue-300 text-center';
   phaseInfo.textContent = `You ended in the ${gameState.currentPhase} phase.`;
   details.appendChild(phaseInfo);
   
   const factorsTitle = document.createElement('p');
-  factorsTitle.className = 'font-bold mb-2';
-  factorsTitle.textContent = 'Final State:';
+  factorsTitle.className = 'font-bold mb-2 text-blue-200 text-sm uppercase';
+  factorsTitle.textContent = 'Final State Analysis:';
   details.appendChild(factorsTitle);
   
   const factorsList = document.createElement('ul');
-  factorsList.className = 'list-disc ml-5';
+  factorsList.className = 'space-y-1 text-sm';
+  
+  // Factor summary grid
+  const factorGrid = document.createElement('div');
+  factorGrid.className = 'grid grid-cols-2 gap-2 mb-3';
+  
+  const createFactorItem = (name: string, value: number, threshold: number, color: string, icon: string) => {
+    const item = document.createElement('div');
+    item.className = 'flex justify-between items-center bg-black/20 px-2 py-1 rounded';
+    
+    const labelPart = document.createElement('div');
+    labelPart.className = 'flex items-center';
+    
+    const iconSpan = document.createElement('span');
+    iconSpan.className = 'mr-2';
+    iconSpan.textContent = icon;
+    labelPart.appendChild(iconSpan);
+    
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'text-gray-300 text-xs';
+    nameSpan.textContent = name;
+    labelPart.appendChild(nameSpan);
+    
+    item.appendChild(labelPart);
+    
+    const valuePart = document.createElement('span');
+    valuePart.className = `text-xs font-bold ${value >= threshold ? color : 'text-gray-400'}`;
+    valuePart.textContent = value.toString();
+    item.appendChild(valuePart);
+    
+    return item;
+  };
+  
+  // Add key factors with their values
+  factorGrid.appendChild(createFactorItem('AI Capability', gameState.factors.AICapability, 70, 'text-blue-400', '🤖'));
+  factorGrid.appendChild(createFactorItem('Alignment', gameState.factors.AlignmentProgress, 60, 'text-green-400', '🔒'));
+  factorGrid.appendChild(createFactorItem('Reputation', gameState.factors.Reputation, 50, 'text-pink-400', '⭐'));
+  factorGrid.appendChild(createFactorItem('Market', gameState.factors.MarketDynamics, 70, 'text-orange-400', '📈'));
+  
+  details.appendChild(factorGrid);
   
   // Add factor summaries
   if (gameState.factors.AICapability > 70) {
     const item = document.createElement('li');
-    item.textContent = 'Your AI technology is highly advanced.';
+    item.className = 'text-blue-100';
+    item.innerHTML = '<span class="text-blue-400">✓</span> Your AI technology is highly advanced.';
+    factorsList.appendChild(item);
+  } else {
+    const item = document.createElement('li');
+    item.className = 'text-blue-100';
+    item.innerHTML = '<span class="text-gray-500">✗</span> Your AI technology needs further development.';
     factorsList.appendChild(item);
   }
   
   if (gameState.factors.AlignmentProgress < 50) {
     const item = document.createElement('li');
-    item.textContent = 'Your safety measures need improvement.';
+    item.className = 'text-blue-100';
+    item.innerHTML = '<span class="text-gray-500">✗</span> Your safety measures need improvement.';
+    factorsList.appendChild(item);
+  } else {
+    const item = document.createElement('li');
+    item.className = 'text-blue-100';
+    item.innerHTML = '<span class="text-green-400">✓</span> Your safety protocols are robust.';
     factorsList.appendChild(item);
   }
   
   if (gameState.factors.Reputation > 60) {
     const item = document.createElement('li');
-    item.textContent = 'Your company is well-regarded.';
+    item.className = 'text-blue-100';
+    item.innerHTML = '<span class="text-pink-400">✓</span> Your company is well-regarded.';
+    factorsList.appendChild(item);
+  } else {
+    const item = document.createElement('li');
+    item.className = 'text-blue-100';
+    item.innerHTML = '<span class="text-gray-500">✗</span> Your company\'s reputation could be better.';
     factorsList.appendChild(item);
   }
   
   if (gameState.factors.FinancialResources > 70) {
     const item = document.createElement('li');
-    item.textContent = 'Your financial position is strong.';
+    item.className = 'text-blue-100';
+    item.innerHTML = '<span class="text-yellow-400">✓</span> Your financial position is strong.';
     factorsList.appendChild(item);
   }
   
   details.appendChild(factorsList);
-  card.appendChild(details);
+  content.appendChild(details);
   
-  const button = createButton('Play Again', onPlayAgain, 'mt-4 w-full');
-  card.appendChild(button);
+  // Terminal-style status message
+  const statusLog = document.createElement('div');
+  statusLog.className = 'bg-black/60 font-mono text-xs text-blue-500 p-3 mx-6 mb-6 text-left overflow-auto rounded border border-blue-900/50';
+  statusLog.style.maxHeight = '70px';
   
-  container.appendChild(card);
+  const logContent = document.createElement('pre');
+  logContent.innerHTML = `
+STATUS: SIMULATION COMPLETED
+> ALL TURNS PROCESSED: 12/12
+> VICTORY CONDITIONS: NOT MET
+> CATASTROPHE AVOIDED
+> FINAL EVALUATION: NEUTRAL OUTCOME
+  `.trim();
+  statusLog.appendChild(logContent);
+  content.appendChild(statusLog);
+  
+  const button = createButton('Run New Simulation', onPlayAgain, 'w-full max-w-xs mx-auto mb-4');
+  content.appendChild(button);
+  
+  container.appendChild(content);
   return container;
 }
 
 // Create game info modal
 export function createGameInfoModal(onClose: () => void): HTMLElement {
   const modalOverlay = document.createElement('div');
-  modalOverlay.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4';
+  modalOverlay.className = 'fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-50 p-4';
   
   const modal = document.createElement('div');
-  modal.className = 'bg-gray-800 rounded-lg p-8 max-w-3xl w-full mx-auto text-white max-h-[80vh] overflow-y-auto';
+  modal.className = 'bg-gray-800/90 rounded-lg p-8 max-w-3xl w-full mx-auto text-white max-h-[80vh] overflow-y-auto border border-blue-900/50 relative';
+  
+  // Add futuristic design elements
+  const headerGlow = document.createElement('div');
+  headerGlow.className = 'absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-green-500';
+  modal.appendChild(headerGlow);
+  
+  // Corner markers for futuristic look
+  const cornerPositions = [
+    'top-0 left-0', 'top-0 right-0', 'bottom-0 left-0', 'bottom-0 right-0'
+  ];
+  
+  cornerPositions.forEach(position => {
+    const corner = document.createElement('div');
+    corner.className = `absolute ${position} w-3 h-3 border-blue-500`;
+    
+    if (position.includes('top') && position.includes('left')) {
+      corner.classList.add('border-t', 'border-l');
+    } else if (position.includes('top') && position.includes('right')) {
+      corner.classList.add('border-t', 'border-r');
+    } else if (position.includes('bottom') && position.includes('left')) {
+      corner.classList.add('border-b', 'border-l');
+    } else {
+      corner.classList.add('border-b', 'border-r');
+    }
+    
+    modal.appendChild(corner);
+  });
+  
+  // Add a code-like line numbering on the left side
+  const lineNumbers = document.createElement('div');
+  lineNumbers.className = 'absolute left-3 top-20 bottom-8 flex flex-col items-end pr-2 text-blue-500/50 font-mono text-xs';
+  lineNumbers.style.borderRight = '1px solid rgba(59, 130, 246, 0.2)';
+  lineNumbers.style.width = '30px';
+  
+  for (let i = 1; i <= 30; i++) {
+    const lineNumber = document.createElement('div');
+    lineNumber.className = 'leading-loose';
+    lineNumber.textContent = i.toString().padStart(2, '0');
+    lineNumbers.appendChild(lineNumber);
+  }
+  
+  modal.appendChild(lineNumbers);
   
   const closeButton = document.createElement('button');
-  closeButton.className = 'absolute top-4 right-4 text-gray-400 hover:text-white text-xl font-bold';
-  closeButton.textContent = '×';
+  closeButton.className = 'absolute top-4 right-4 text-gray-400 hover:text-blue-300 text-xl font-bold transition-colors';
+  closeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>';
   closeButton.addEventListener('click', onClose);
   modal.appendChild(closeButton);
   
   const title = document.createElement('h2');
-  title.className = 'text-2xl font-bold mb-4 text-blue-400';
-  title.textContent = 'Game Mechanics';
+  title.className = 'text-2xl font-bold mb-6 text-blue-400 pl-10';
+  title.textContent = 'System Documentation';
   modal.appendChild(title);
   
   const content = document.createElement('div');
-  content.className = 'space-y-6';
+  content.className = 'space-y-6 pl-10';
   
   // Game Overview
   const overviewSection = document.createElement('div');
   const overviewTitle = document.createElement('h3');
   overviewTitle.className = 'text-xl font-semibold mb-2 text-blue-300';
-  overviewTitle.textContent = 'Game Overview';
+  overviewTitle.textContent = '// Game Overview';
   overviewSection.appendChild(overviewTitle);
   
   const overviewText = document.createElement('p');
+  overviewText.className = 'text-blue-100';
   overviewText.innerHTML = `
     You are the CEO of an AI company navigating through three phases—<b>Infancy</b>, <b>Growth</b>, and <b>Maturity</b>—over 12 turns. 
     Your goal is to manage various factors while avoiding catastrophic failures or stagnation.
@@ -721,38 +1073,71 @@ export function createGameInfoModal(onClose: () => void): HTMLElement {
   const phasesSection = document.createElement('div');
   const phasesTitle = document.createElement('h3');
   phasesTitle.className = 'text-xl font-semibold mb-2 text-blue-300';
-  phasesTitle.textContent = 'Game Phases';
+  phasesTitle.textContent = '// Game Phases';
   phasesSection.appendChild(phasesTitle);
   
-  const phasesText = document.createElement('p');
-  phasesText.innerHTML = `
-    <b>Infancy:</b> Turns 1-4 - Establishing your company. <br>
-    <b>Growth:</b> Turns 5-8 - Scaling operations and influence. <br>
-    <b>Maturity:</b> Turns 9-12 - Solidifying your position in the world. <br><br>
-    <i>Each phase features its own set of events and decisions.</i>
-  `;
-  phasesSection.appendChild(phasesText);
+  const phasesContainer = document.createElement('div');
+  phasesContainer.className = 'grid grid-cols-1 md:grid-cols-3 gap-3 mb-4';
+  
+  const phases = [
+    { name: 'Infancy', turns: '1-4', desc: 'Establishing your company foundations.' },
+    { name: 'Growth', turns: '5-8', desc: 'Scaling operations and influence.' },
+    { name: 'Maturity', turns: '9-12', desc: 'Solidifying your position in the market.' }
+  ];
+  
+  phases.forEach(phase => {
+    const phaseCard = document.createElement('div');
+    phaseCard.className = 'bg-blue-900/20 p-3 rounded border border-blue-800/30';
+    
+    const phaseName = document.createElement('div');
+    phaseName.className = 'font-bold text-blue-300 mb-1';
+    phaseName.textContent = phase.name;
+    phaseCard.appendChild(phaseName);
+    
+    const phaseTurns = document.createElement('div');
+    phaseTurns.className = 'text-xs text-blue-400 mb-2';
+    phaseTurns.textContent = `Turns ${phase.turns}`;
+    phaseCard.appendChild(phaseTurns);
+    
+    const phaseDesc = document.createElement('div');
+    phaseDesc.className = 'text-sm text-blue-100';
+    phaseDesc.textContent = phase.desc;
+    phaseCard.appendChild(phaseDesc);
+    
+    phasesContainer.appendChild(phaseCard);
+  });
+  
+  phasesSection.appendChild(phasesContainer);
+  
+  const phaseNote = document.createElement('p');
+  phaseNote.className = 'text-sm text-blue-200 italic';
+  phaseNote.textContent = 'Each phase features its own set of events and decisions.';
+  phasesSection.appendChild(phaseNote);
+  
   content.appendChild(phasesSection);
   
   // Events & Decisions
   const eventSection = document.createElement('div');
   const eventTitle = document.createElement('h3');
   eventTitle.className = 'text-xl font-semibold mb-2 text-blue-300';
-  eventTitle.textContent = 'Events & Decisions';
+  eventTitle.textContent = '// Events & Decisions';
   eventSection.appendChild(eventTitle);
   
-  const eventText = document.createElement('p');
+  const eventText = document.createElement('div');
+  eventText.className = 'text-blue-100';
   eventText.innerHTML = `
-    Each turn includes:
-    <ul class="list-disc list-inside mb-2">
+    <p class="mb-2">Each turn includes:</p>
+    <ul class="list-disc list-inside mb-3 pl-2 space-y-1">
       <li>Random Events that affect your company</li>
       <li>Critical Decisions you must make</li>
     </ul>
     
-    <b>Card Variety:</b> The game tracks which cards you've seen to prevent repeats.
-    Cards are specific to each phase, with new ones unlocking as you progress.
-    Only when all available cards for your current phase have been seen will
-    they start repeating.
+    <div class="bg-blue-900/20 p-3 rounded border border-blue-800/30 text-sm mb-3">
+      <span class="text-blue-300 font-bold">Card Variety:</span> The game tracks which cards you've seen to prevent repeats.
+      Cards are specific to each phase, with new ones unlocking as you progress.
+      Only when all available cards for your current phase have been seen will
+      they start repeating.
+    </div>
   `;
   eventSection.appendChild(eventText);
   content.appendChild(eventSection);
@@ -761,42 +1146,122 @@ export function createGameInfoModal(onClose: () => void): HTMLElement {
   const factorsSection = document.createElement('div');
   const factorsTitle = document.createElement('h3');
   factorsTitle.className = 'text-xl font-semibold mb-2 text-blue-300';
-  factorsTitle.textContent = 'Game Factors';
+  factorsTitle.textContent = '// Game Factors';
   factorsSection.appendChild(factorsTitle);
   
-  const factorsText = document.createElement('p');
-  factorsText.innerHTML = `
-    <b>Local Factors (company-specific):</b> <br>
-    - <span class="text-yellow-400">Financial Resources</span>: Your company's budget <br>
-    - <span class="text-purple-400">Human Capital</span>: The quality of your workforce <br>
-    - <span class="text-blue-400">AI Capability</span>: The advancement level of your AI technology <br>
-    - <span class="text-pink-400">Reputation</span>: Public and stakeholder perception <br>
-    - <span class="text-green-400">Alignment Progress</span>: How well your AI aligns with safety standards <br><br>
+  const factorGroups = document.createElement('div');
+  factorGroups.className = 'grid grid-cols-1 md:grid-cols-2 gap-4 mb-4';
+  
+  const companyFactorsBox = document.createElement('div');
+  companyFactorsBox.className = 'bg-blue-900/20 p-4 rounded border border-blue-800/30';
+  
+  const companyTitle = document.createElement('h4');
+  companyTitle.className = 'text-sm font-bold mb-2 text-blue-300';
+  companyTitle.textContent = 'LOCAL FACTORS (company-specific)';
+  companyFactorsBox.appendChild(companyTitle);
+  
+  const companyFactors = document.createElement('ul');
+  companyFactors.className = 'space-y-2 text-sm';
+  
+  [
+    { icon: '💰', name: 'Financial Resources', color: 'text-yellow-400', desc: 'Your company\'s budget' },
+    { icon: '👥', name: 'Human Capital', color: 'text-purple-400', desc: 'The quality of your workforce' },
+    { icon: '🤖', name: 'AI Capability', color: 'text-blue-400', desc: 'The advancement level of your AI technology' },
+    { icon: '⭐', name: 'Reputation', color: 'text-pink-400', desc: 'Public and stakeholder perception' },
+    { icon: '🔒', name: 'Alignment Progress', color: 'text-green-400', desc: 'How well your AI aligns with safety standards' }
+  ].forEach(factor => {
+    const item = document.createElement('li');
+    item.className = 'flex items-start';
     
-    <b>Global Factors (world state):</b> <br>
-    - <span class="text-orange-400">Market Dynamics</span>: The state of competition and opportunities <br>
-    - <span class="text-indigo-400">Public Awareness</span>: Public knowledge about AI issues <br>
-    - <span class="text-red-400">Governance Structure</span>: The regulatory environment <br>
-  `;
-  factorsSection.appendChild(factorsText);
+    const factorIcon = document.createElement('span');
+    factorIcon.className = 'mr-2';
+    factorIcon.textContent = factor.icon;
+    item.appendChild(factorIcon);
+    
+    const factorContent = document.createElement('div');
+    
+    const factorName = document.createElement('span');
+    factorName.className = `font-bold ${factor.color}`;
+    factorName.textContent = factor.name;
+    factorContent.appendChild(factorName);
+    
+    const factorDesc = document.createElement('span');
+    factorDesc.className = 'text-blue-100 ml-1';
+    factorDesc.textContent = `: ${factor.desc}`;
+    factorContent.appendChild(factorDesc);
+    
+    item.appendChild(factorContent);
+    companyFactors.appendChild(item);
+  });
+  
+  companyFactorsBox.appendChild(companyFactors);
+  factorGroups.appendChild(companyFactorsBox);
+  
+  const globalFactorsBox = document.createElement('div');
+  globalFactorsBox.className = 'bg-blue-900/20 p-4 rounded border border-blue-800/30';
+  
+  const globalTitle = document.createElement('h4');
+  globalTitle.className = 'text-sm font-bold mb-2 text-blue-300';
+  globalTitle.textContent = 'GLOBAL FACTORS (world state)';
+  globalFactorsBox.appendChild(globalTitle);
+  
+  const globalFactors = document.createElement('ul');
+  globalFactors.className = 'space-y-2 text-sm';
+  
+  [
+    { icon: '📈', name: 'Market Dynamics', color: 'text-orange-400', desc: 'The state of competition and opportunities' },
+    { icon: '👁️', name: 'Public Awareness', color: 'text-indigo-400', desc: 'Public knowledge about AI issues' },
+    { icon: '⚖️', name: 'Governance Structure', color: 'text-red-400', desc: 'The regulatory environment' }
+  ].forEach(factor => {
+    const item = document.createElement('li');
+    item.className = 'flex items-start';
+    
+    const factorIcon = document.createElement('span');
+    factorIcon.className = 'mr-2';
+    factorIcon.textContent = factor.icon;
+    item.appendChild(factorIcon);
+    
+    const factorContent = document.createElement('div');
+    
+    const factorName = document.createElement('span');
+    factorName.className = `font-bold ${factor.color}`;
+    factorName.textContent = factor.name;
+    factorContent.appendChild(factorName);
+    
+    const factorDesc = document.createElement('span');
+    factorDesc.className = 'text-blue-100 ml-1';
+    factorDesc.textContent = `: ${factor.desc}`;
+    factorContent.appendChild(factorDesc);
+    
+    item.appendChild(factorContent);
+    globalFactors.appendChild(item);
+  });
+  
+  globalFactorsBox.appendChild(globalFactors);
+  factorGroups.appendChild(globalFactorsBox);
+  
+  factorsSection.appendChild(factorGroups);
   content.appendChild(factorsSection);
   
   // Feedback Loops
   const feedbackSection = document.createElement('div');
   const feedbackTitle = document.createElement('h3');
   feedbackTitle.className = 'text-xl font-semibold mb-2 text-blue-300';
-  feedbackTitle.textContent = 'Feedback Loops';
+  feedbackTitle.textContent = '// Feedback Loops';
   feedbackSection.appendChild(feedbackTitle);
   
-  const feedbackText = document.createElement('p');
+  const feedbackText = document.createElement('div');
+  feedbackText.className = 'bg-blue-900/20 p-4 rounded border border-blue-800/30 text-blue-100';
   feedbackText.innerHTML = `
-    Factors influence each other through feedback loops: <br>
-    - High Public Awareness increases Governance Structure <br>
-    - Advanced AI with poor Alignment damages Reputation <br>
-    - Strong Human Capital boosts AI Capability <br>
-    - Low Financial Resources hurts Human Capital <br>
-    - High Reputation increases Financial Resources <br>
-    - And more... <br>
+    <p class="mb-2">Factors influence each other through feedback loops:</p>
+    <ul class="list-none space-y-1 text-sm">
+      <li><span class="text-indigo-400 font-bold">↑</span> High Public Awareness increases Governance Structure</li>
+      <li><span class="text-blue-400 font-bold">↑</span> Advanced AI with <span class="text-green-400 font-bold">↓</span> poor Alignment damages Reputation</li>
+      <li><span class="text-purple-400 font-bold">↑</span> Strong Human Capital boosts AI Capability</li>
+      <li><span class="text-yellow-400 font-bold">↓</span> Low Financial Resources hurts Human Capital</li>
+      <li><span class="text-pink-400 font-bold">↑</span> High Reputation increases Financial Resources</li>
+      <li class="text-blue-200 italic">And more...</li>
+    </ul>
   `;
   feedbackSection.appendChild(feedbackText);
   content.appendChild(feedbackSection);
@@ -805,29 +1270,92 @@ export function createGameInfoModal(onClose: () => void): HTMLElement {
   const winLossSection = document.createElement('div');
   const winLossTitle = document.createElement('h3');
   winLossTitle.className = 'text-xl font-semibold mb-2 text-blue-300';
-  winLossTitle.textContent = 'Win and Loss Conditions';
+  winLossTitle.textContent = '// Win and Loss Conditions';
   winLossSection.appendChild(winLossTitle);
   
-  const winLossText = document.createElement('p');
-  winLossText.innerHTML = `
-    <b>Victory:</b> Reach Maturity by turn 12 and have: <br>
-    - AI Capability > 70 <br>
-    - Alignment Progress > 60 <br>
-    - Reputation > 50 <br>
-    - Market Dynamics > 70 <br><br>
-    
-    <b>Neutral Ending:</b> Survive 12 turns without achieving victory. <br><br>
-    
-    <b>Loss Conditions:</b> <br>
-    - <i>Doom Losses:</i> <br>
-      • AI Capability > 80 with Alignment < 40: AI catastrophe <br>
-      • Public Awareness < 20 with AI Capability > 60: Disaster strikes unprepared world <br>
-      • Other catastrophic combinations of factors <br>
-    - <i>Stagnation Losses:</i> <br>
-      • Governance > 80 with AI Capability < 40: Overregulation <br>
-      • Public Awareness > 80 with Alignment < 40: Public panic <br>
+  const winBox = document.createElement('div');
+  winBox.className = 'bg-green-900/20 p-4 rounded border border-green-800/30 mb-3';
+  
+  const winTitle = document.createElement('h4');
+  winTitle.className = 'text-green-400 font-bold mb-2';
+  winTitle.textContent = 'VICTORY CONDITIONS';
+  winBox.appendChild(winTitle);
+  
+  const winText = document.createElement('div');
+  winText.className = 'text-blue-100 text-sm';
+  winText.innerHTML = `
+    <p class="mb-2">Reach Maturity by turn 12 and have:</p>
+    <ul class="list-none space-y-1 pl-2">
+      <li><span class="text-blue-400 font-bold">AI Capability > 70</span></li>
+      <li><span class="text-green-400 font-bold">Alignment Progress > 60</span></li>
+      <li><span class="text-pink-400 font-bold">Reputation > 50</span></li>
+      <li><span class="text-orange-400 font-bold">Market Dynamics > 70</span></li>
+    </ul>
   `;
-  winLossSection.appendChild(winLossText);
+  winBox.appendChild(winText);
+  winLossSection.appendChild(winBox);
+  
+  const neutralBox = document.createElement('div');
+  neutralBox.className = 'bg-yellow-900/20 p-4 rounded border border-yellow-800/30 mb-3';
+  
+  const neutralTitle = document.createElement('h4');
+  neutralTitle.className = 'text-yellow-400 font-bold mb-2';
+  neutralTitle.textContent = 'NEUTRAL ENDING';
+  neutralBox.appendChild(neutralTitle);
+  
+  const neutralText = document.createElement('div');
+  neutralText.className = 'text-blue-100 text-sm';
+  neutralText.textContent = 'Survive 12 turns without achieving victory requirements.';
+  neutralBox.appendChild(neutralText);
+  
+  winLossSection.appendChild(neutralBox);
+  
+  const lossBoxes = document.createElement('div');
+  lossBoxes.className = 'grid grid-cols-1 md:grid-cols-2 gap-3';
+  
+  const doomBox = document.createElement('div');
+  doomBox.className = 'bg-red-900/20 p-4 rounded border border-red-800/30';
+  
+  const doomTitle = document.createElement('h4');
+  doomTitle.className = 'text-red-400 font-bold mb-2';
+  doomTitle.textContent = 'DOOM LOSSES';
+  doomBox.appendChild(doomTitle);
+  
+  const doomText = document.createElement('div');
+  doomText.className = 'text-blue-100 text-sm';
+  doomText.innerHTML = `
+    <ul class="list-none space-y-1">
+      <li>• AI Capability > 80 with Alignment < 40</li>
+      <li>• Public Awareness < 20 with AI Capability > 60</li>
+      <li>• Market Dynamics > 80 with Governance < 30</li>
+      <li>• Financial Resources < 10</li>
+      <li>• Reputation < 10</li>
+    </ul>
+  `;
+  doomBox.appendChild(doomText);
+  lossBoxes.appendChild(doomBox);
+  
+  const stagBox = document.createElement('div');
+  stagBox.className = 'bg-orange-900/20 p-4 rounded border border-orange-800/30';
+  
+  const stagTitle = document.createElement('h4');
+  stagTitle.className = 'text-orange-400 font-bold mb-2';
+  stagTitle.textContent = 'STAGNATION LOSSES';
+  stagBox.appendChild(stagTitle);
+  
+  const stagText = document.createElement('div');
+  stagText.className = 'text-blue-100 text-sm';
+  stagText.innerHTML = `
+    <ul class="list-none space-y-1">
+      <li>• Governance > 80 with AI Capability < 40</li>
+      <li>• Public Awareness > 80 with Alignment < 40</li>
+      <li>• Market Dynamics < 20 with AI Capability < 40</li>
+    </ul>
+  `;
+  stagBox.appendChild(stagText);
+  lossBoxes.appendChild(stagBox);
+  
+  winLossSection.appendChild(lossBoxes);
   content.appendChild(winLossSection);
   
   modal.appendChild(content);
@@ -838,29 +1366,16 @@ export function createGameInfoModal(onClose: () => void): HTMLElement {
 
 // Create event screen
 export function createEventScreen(gameState: GameState, onContinue: () => void): HTMLElement {
-  const { turn, factors, currentEvent, currentPhase } = gameState;
+  const { factors, currentEvent, currentPhase } = gameState;
   
   const container = document.createElement('div');
   container.className = 'flex flex-col min-h-screen p-2 py-4';
   
   const header = document.createElement('div');
-  header.className = 'mb-4';
-  
-  const statusContainer = document.createElement('div');
-  statusContainer.className = 'flex justify-between mb-3';
-  
-  const turnCounter = document.createElement('div');
-  turnCounter.textContent = `Turn: ${turn}/12`;
-  // statusContainer.appendChild(turnCounter);
-  
-  const phaseDisplay = document.createElement('div');
-  phaseDisplay.textContent = `Phase: ${currentPhase}`;
-  // statusContainer.appendChild(phaseDisplay);
-  
-  // header.appendChild(statusContainer);
+  header.className = 'mb-6';
   
   // Add factors display
-  const factorsDisplay = createFactorsDisplay(factors);
+  const factorsDisplay = createFactorsDisplay(factors, gameState);
   header.appendChild(factorsDisplay);
   
   container.appendChild(header);
@@ -869,9 +1384,9 @@ export function createEventScreen(gameState: GameState, onContinue: () => void):
   const cardContent = document.createElement('div');
   cardContent.className = 'flex flex-col h-full';
   
-  // Create a container for the ASCII art display
+  // Create a container for the ASCII art display with futuristic styling
   const asciiContainer = document.createElement('div');
-  asciiContainer.className = 'mb-6 mx-auto flex items-center justify-center';
+  asciiContainer.className = 'mb-8 mx-auto ascii-container';
   
   // Calculate best size based on device viewport
   const getOptimalSize = () => {
@@ -900,18 +1415,22 @@ export function createEventScreen(gameState: GameState, onContinue: () => void):
   asciiContainer.style.position = 'relative';
   asciiContainer.style.transition = 'width 0.3s, height 0.3s'; // Smooth resize
   
-  // Create a border with glow effect
-  const borderElement = document.createElement('div');
-  borderElement.className = 'absolute inset-0 rounded-lg';
-  borderElement.style.border = '2px solid rgba(0, 255, 0, 0.3)';
-  borderElement.style.boxShadow = '0 0 15px rgba(0, 255, 0, 0.2), inset 0 0 10px rgba(0, 255, 0, 0.1)';
-  borderElement.style.pointerEvents = 'none'; // Don't interfere with interactions
-  borderElement.style.zIndex = '1';
-  asciiContainer.appendChild(borderElement);
+  // Add various effects for futuristic look
+  const glowEffect = document.createElement('div');
+  glowEffect.className = 'ascii-glow';
+  asciiContainer.appendChild(glowEffect);
+  
+  const scanlinesEffect = document.createElement('div');
+  scanlinesEffect.className = 'ascii-scanlines';
+  asciiContainer.appendChild(scanlinesEffect);
+  
+  const flickerEffect = document.createElement('div');
+  flickerEffect.className = 'ascii-flicker';
+  asciiContainer.appendChild(flickerEffect);
   
   // Replace image with ASCII art from text file
   const asciiArtContainer = document.createElement('pre');
-  asciiArtContainer.className = 'font-mono text-green-500 bg-black p-2 rounded-lg';
+  asciiArtContainer.className = 'ascii-art p-2 rounded-lg';
   asciiArtContainer.style.margin = '0';
   asciiArtContainer.style.width = '100%';
   asciiArtContainer.style.height = '100%';
@@ -924,15 +1443,6 @@ export function createEventScreen(gameState: GameState, onContinue: () => void):
   asciiArtContainer.style.position = 'relative';
   asciiArtContainer.style.zIndex = '0';
   asciiArtContainer.style.overflow = 'hidden';
-  
-  // Add a subtle scanline effect for retro look
-  const scanlineEffect = document.createElement('div');
-  scanlineEffect.className = 'absolute inset-0 pointer-events-none';
-  scanlineEffect.style.backgroundImage = 'linear-gradient(transparent 50%, rgba(0, 0, 0, 0.1) 50%)';
-  scanlineEffect.style.backgroundSize = '100% 4px';
-  scanlineEffect.style.opacity = '0.15';
-  scanlineEffect.style.zIndex = '2';
-  asciiArtContainer.appendChild(scanlineEffect);
   
   // Listen for window resize to adjust container size
   window.addEventListener('resize', () => {
@@ -1024,22 +1534,22 @@ export function createEventScreen(gameState: GameState, onContinue: () => void):
   
   if (currentEvent) {
     const eventTitle = document.createElement('h2');
-    eventTitle.className = 'text-xl font-bold mb-4 text-center text-yellow-500';
+    eventTitle.className = 'text-xl font-bold mb-4 text-center text-yellow-300';
     eventTitle.textContent = 'RANDOM EVENT';
     cardContent.appendChild(eventTitle);
     
     const eventScenario = document.createElement('p');
-    eventScenario.className = 'mb-6 text-lg';
+    eventScenario.className = 'mb-6 text-lg text-center text-blue-100';
     eventScenario.textContent = currentEvent.scenario;
     cardContent.appendChild(eventScenario);
     
     const eventOutcome = document.createElement('p');
-    eventOutcome.className = 'mb-8 text-lg';
+    eventOutcome.className = 'mb-8 text-lg text-center text-blue-200';
     eventOutcome.textContent = currentEvent.leftSnippet;
     cardContent.appendChild(eventOutcome);
   } else {
     const errorMessage = document.createElement('p');
-    errorMessage.className = 'text-red-500';
+    errorMessage.className = 'text-red-500 text-center';
     errorMessage.textContent = 'Error: No event found';
     cardContent.appendChild(errorMessage);
   }

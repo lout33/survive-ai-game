@@ -15,7 +15,7 @@ import {
   createDoomLossScreen,
   createStagnationLossScreen,
   createNeutralEndingScreen,
-  createGameInfoModal,
+  createGameInfoModal
 } from './ui'
 
 // Get the app element
@@ -48,24 +48,6 @@ function showInfoModal() {
 function render() {
   // Clear the app container
   app.innerHTML = ''
-  
-  // Add game header with title
-  const header = document.createElement('header')
-  header.className = 'text-center py-4'
-  const title = document.createElement('h1')
-  title.className = 'game-title text-2xl md:text-3xl mb-0'
-  // title.textContent = 'Survive the AI Future: CEO Edition'
-  
-  // Add turn counter if we're in a game
-  if (gameState.currentScreen !== 'start') {
-    const turnInfo = document.createElement('div')
-    turnInfo.className = 'text-xs text-blue-300 mb-2'
-    turnInfo.textContent = `TURN ${gameState.turn}/12 | PHASE: ${gameState.currentPhase}`
-    header.appendChild(turnInfo)
-  }
-  
-  header.appendChild(title)
-  // app.appendChild(header)
   
   // Render based on current screen
   switch (gameState.currentScreen) {
