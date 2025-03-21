@@ -296,10 +296,42 @@ export function createDecisionScreen(
   // Create a container for the ASCII art display
   const asciiContainer = document.createElement('div');
   asciiContainer.className = 'mb-6 mx-auto flex items-center justify-center';
-  asciiContainer.style.width = '320px';
-  asciiContainer.style.height = '320px';
-  asciiContainer.style.maxWidth = '90vw';
+  
+  // Calculate best size based on device viewport
+  const getOptimalSize = () => {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // For mobile devices
+    if (viewportWidth < 768) {
+      return Math.min(viewportWidth * 0.9, viewportHeight * 0.4, 300);
+    }
+    // For tablets
+    else if (viewportWidth < 1024) {
+      return Math.min(viewportWidth * 0.7, viewportHeight * 0.5, 350);
+    }
+    // For desktops
+    else {
+      return Math.min(viewportWidth * 0.5, viewportHeight * 0.6, 400);
+    }
+  };
+  
+  const containerSize = getOptimalSize();
+  asciiContainer.style.width = `${containerSize}px`;
+  asciiContainer.style.height = `${containerSize}px`;
+  asciiContainer.style.maxWidth = '95vw';
+  asciiContainer.style.maxHeight = '50vh';
   asciiContainer.style.position = 'relative';
+  asciiContainer.style.transition = 'width 0.3s, height 0.3s'; // Smooth resize
+  
+  // Create a border with glow effect
+  const borderElement = document.createElement('div');
+  borderElement.className = 'absolute inset-0 rounded-lg';
+  borderElement.style.border = '2px solid rgba(0, 255, 0, 0.3)';
+  borderElement.style.boxShadow = '0 0 15px rgba(0, 255, 0, 0.2), inset 0 0 10px rgba(0, 255, 0, 0.1)';
+  borderElement.style.pointerEvents = 'none'; // Don't interfere with interactions
+  borderElement.style.zIndex = '1';
+  asciiContainer.appendChild(borderElement);
   
   // Replace image with ASCII art from text file
   const asciiArtContainer = document.createElement('pre');
@@ -307,14 +339,31 @@ export function createDecisionScreen(
   asciiArtContainer.style.margin = '0';
   asciiArtContainer.style.width = '100%';
   asciiArtContainer.style.height = '100%';
-  asciiArtContainer.style.fontSize = '3px';
+  asciiArtContainer.style.fontSize = '0.25rem'; // Use relative font size
   asciiArtContainer.style.lineHeight = '1';
   asciiArtContainer.style.display = 'flex';
   asciiArtContainer.style.alignItems = 'center';
   asciiArtContainer.style.justifyContent = 'center';
   asciiArtContainer.style.transformOrigin = 'center';
-  asciiArtContainer.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.2)';
+  asciiArtContainer.style.position = 'relative';
+  asciiArtContainer.style.zIndex = '0';
   asciiArtContainer.style.overflow = 'hidden';
+  
+  // Add a subtle scanline effect for retro look
+  const scanlineEffect = document.createElement('div');
+  scanlineEffect.className = 'absolute inset-0 pointer-events-none';
+  scanlineEffect.style.backgroundImage = 'linear-gradient(transparent 50%, rgba(0, 0, 0, 0.1) 50%)';
+  scanlineEffect.style.backgroundSize = '100% 4px';
+  scanlineEffect.style.opacity = '0.15';
+  scanlineEffect.style.zIndex = '2';
+  asciiArtContainer.appendChild(scanlineEffect);
+  
+  // Listen for window resize to adjust container size
+  window.addEventListener('resize', () => {
+    const newSize = getOptimalSize();
+    asciiContainer.style.width = `${newSize}px`;
+    asciiContainer.style.height = `${newSize}px`;
+  });
   
   // Set the path to load based on the current phase and event/decision type
   const phaseName = gameState.currentPhase ? gameState.currentPhase.toLowerCase() : 'growth';
@@ -352,21 +401,42 @@ export function createDecisionScreen(
       asciiArtContainer.innerHTML = '';
       asciiArtContainer.appendChild(contentWrapper);
       
-      // Dynamically adjust font size based on content dimensions
-      // First get the width and height of the text content
+      // Dynamically adjust font size based on content dimensions and device
       const contentWidth = contentWrapper.scrollWidth;
       const contentHeight = contentWrapper.scrollHeight;
       const containerWidth = asciiContainer.clientWidth;
       const containerHeight = asciiContainer.clientHeight;
       
       // Calculate the scale needed to fit the content
+      // Adjust scaling based on screen size - give more margin on small screens
+      const viewportWidth = window.innerWidth;
+      let scaleFactor;
+      
+      if (viewportWidth < 768) {
+        // Mobile - use more conservative scaling
+        scaleFactor = 0.85;
+      } else if (viewportWidth < 1024) {
+        // Tablet
+        scaleFactor = 0.90;
+      } else {
+        // Desktop
+        scaleFactor = 0.95;
+      }
+      
       const widthRatio = containerWidth / contentWidth;
       const heightRatio = containerHeight / contentHeight;
-      const scale = Math.min(widthRatio, heightRatio) * 0.95; // 95% of the max scale to add some margin
+      const scale = Math.min(widthRatio, heightRatio) * scaleFactor;
       
       // Apply the calculated scale
       contentWrapper.style.transform = `scale(${scale})`;
       contentWrapper.style.transformOrigin = 'center';
+      
+      // Add a fade-in effect
+      contentWrapper.style.opacity = '0';
+      contentWrapper.style.transition = 'opacity 0.3s ease-in';
+      setTimeout(() => {
+        contentWrapper.style.opacity = '1';
+      }, 50);
     })
     .catch(error => {
       console.error('Failed to load ASCII art:', error);
@@ -802,10 +872,42 @@ export function createEventScreen(gameState: GameState, onContinue: () => void):
   // Create a container for the ASCII art display
   const asciiContainer = document.createElement('div');
   asciiContainer.className = 'mb-6 mx-auto flex items-center justify-center';
-  asciiContainer.style.width = '320px';
-  asciiContainer.style.height = '320px';
-  asciiContainer.style.maxWidth = '90vw';
+  
+  // Calculate best size based on device viewport
+  const getOptimalSize = () => {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // For mobile devices
+    if (viewportWidth < 768) {
+      return Math.min(viewportWidth * 0.9, viewportHeight * 0.4, 300);
+    }
+    // For tablets
+    else if (viewportWidth < 1024) {
+      return Math.min(viewportWidth * 0.7, viewportHeight * 0.5, 350);
+    }
+    // For desktops
+    else {
+      return Math.min(viewportWidth * 0.5, viewportHeight * 0.6, 400);
+    }
+  };
+  
+  const containerSize = getOptimalSize();
+  asciiContainer.style.width = `${containerSize}px`;
+  asciiContainer.style.height = `${containerSize}px`;
+  asciiContainer.style.maxWidth = '95vw';
+  asciiContainer.style.maxHeight = '50vh';
   asciiContainer.style.position = 'relative';
+  asciiContainer.style.transition = 'width 0.3s, height 0.3s'; // Smooth resize
+  
+  // Create a border with glow effect
+  const borderElement = document.createElement('div');
+  borderElement.className = 'absolute inset-0 rounded-lg';
+  borderElement.style.border = '2px solid rgba(0, 255, 0, 0.3)';
+  borderElement.style.boxShadow = '0 0 15px rgba(0, 255, 0, 0.2), inset 0 0 10px rgba(0, 255, 0, 0.1)';
+  borderElement.style.pointerEvents = 'none'; // Don't interfere with interactions
+  borderElement.style.zIndex = '1';
+  asciiContainer.appendChild(borderElement);
   
   // Replace image with ASCII art from text file
   const asciiArtContainer = document.createElement('pre');
@@ -813,14 +915,31 @@ export function createEventScreen(gameState: GameState, onContinue: () => void):
   asciiArtContainer.style.margin = '0';
   asciiArtContainer.style.width = '100%';
   asciiArtContainer.style.height = '100%';
-  asciiArtContainer.style.fontSize = '3px';
+  asciiArtContainer.style.fontSize = '0.25rem'; // Use relative font size
   asciiArtContainer.style.lineHeight = '1';
   asciiArtContainer.style.display = 'flex';
   asciiArtContainer.style.alignItems = 'center';
   asciiArtContainer.style.justifyContent = 'center';
   asciiArtContainer.style.transformOrigin = 'center';
-  asciiArtContainer.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.2)';
+  asciiArtContainer.style.position = 'relative';
+  asciiArtContainer.style.zIndex = '0';
   asciiArtContainer.style.overflow = 'hidden';
+  
+  // Add a subtle scanline effect for retro look
+  const scanlineEffect = document.createElement('div');
+  scanlineEffect.className = 'absolute inset-0 pointer-events-none';
+  scanlineEffect.style.backgroundImage = 'linear-gradient(transparent 50%, rgba(0, 0, 0, 0.1) 50%)';
+  scanlineEffect.style.backgroundSize = '100% 4px';
+  scanlineEffect.style.opacity = '0.15';
+  scanlineEffect.style.zIndex = '2';
+  asciiArtContainer.appendChild(scanlineEffect);
+  
+  // Listen for window resize to adjust container size
+  window.addEventListener('resize', () => {
+    const newSize = getOptimalSize();
+    asciiContainer.style.width = `${newSize}px`;
+    asciiContainer.style.height = `${newSize}px`;
+  });
   
   // Set the path to load based on the current phase and event/decision type
   const phaseName = currentPhase ? currentPhase.toLowerCase() : 'growth';
@@ -858,21 +977,42 @@ export function createEventScreen(gameState: GameState, onContinue: () => void):
       asciiArtContainer.innerHTML = '';
       asciiArtContainer.appendChild(contentWrapper);
       
-      // Dynamically adjust font size based on content dimensions
-      // First get the width and height of the text content
+      // Dynamically adjust font size based on content dimensions and device
       const contentWidth = contentWrapper.scrollWidth;
       const contentHeight = contentWrapper.scrollHeight;
       const containerWidth = asciiContainer.clientWidth;
       const containerHeight = asciiContainer.clientHeight;
       
       // Calculate the scale needed to fit the content
+      // Adjust scaling based on screen size - give more margin on small screens
+      const viewportWidth = window.innerWidth;
+      let scaleFactor;
+      
+      if (viewportWidth < 768) {
+        // Mobile - use more conservative scaling
+        scaleFactor = 0.85;
+      } else if (viewportWidth < 1024) {
+        // Tablet
+        scaleFactor = 0.90;
+      } else {
+        // Desktop
+        scaleFactor = 0.95;
+      }
+      
       const widthRatio = containerWidth / contentWidth;
       const heightRatio = containerHeight / contentHeight;
-      const scale = Math.min(widthRatio, heightRatio) * 0.95; // 95% of the max scale to add some margin
+      const scale = Math.min(widthRatio, heightRatio) * scaleFactor;
       
       // Apply the calculated scale
       contentWrapper.style.transform = `scale(${scale})`;
       contentWrapper.style.transformOrigin = 'center';
+      
+      // Add a fade-in effect
+      contentWrapper.style.opacity = '0';
+      contentWrapper.style.transition = 'opacity 0.3s ease-in';
+      setTimeout(() => {
+        contentWrapper.style.opacity = '1';
+      }, 50);
     })
     .catch(error => {
       console.error('Failed to load ASCII art:', error);
