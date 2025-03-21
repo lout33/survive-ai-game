@@ -4,7 +4,41 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM0Mjg1RjQiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMTJhMiAyIDAgMCAwLTIgMnY0YTIgMiAwIDAgMCAyIDJoNGEyIDIgMCAwIDAgMi0ydi00YTIgMiAwIDAgMC0yLTJoLTR6bTIgNGgtMnYtMmgyeiI+PC9wYXRoPjxwYXRoIGQ9Ik02LjkgOC45TDQgNmw2LTJMMTIgOWwzIDFNOSAxNmMtMS44IDEtNCAyLTQgMnYtN2w0LjkgMC45Ij48L3BhdGg+PHBhdGggZD0iTTEyIDlsNi0xbDIgMnYxMGwtNiAyeiI+PC9wYXRoPjwvc3ZnPg==" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="description" content="Survive the AI Future: CEO Edition - A narrative-driven strategy game where you make critical decisions as the CEO of an AI company. Navigate through 12 turns across three phases, with the goal of achieving a thriving AI future while avoiding catastrophic failures or stagnation." />
     <title>Survive the AI Future: CEO Edition</title>
+    
+    <!-- Preload fonts for faster rendering -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom futuristic cursor styles -->
+    <style>
+      html {
+        cursor: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMCIgY3k9IjEwIiByPSI5IiBzdHJva2U9IiMzYjgyZjYiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjIiIGZpbGw9IiNmZmZmZmYiLz48L3N2Zz4=") 10 10, auto;
+      }
+      
+      a, button, .btn, [role="button"] {
+        cursor: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMCIgY3k9IjEwIiByPSI5IiBzdHJva2U9IiM2MGE1ZmEiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjMiIGZpbGw9IiNmZmZmZmYiLz48L3N2Zz4=") 10 10, pointer;
+      }
+      
+      /* Initial load animation */
+      body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: #020617;
+        z-index: 9999;
+        animation: fadeOut 1.5s ease-out forwards;
+      }
+      
+      @keyframes fadeOut {
+        0% { opacity: 1; }
+        70% { opacity: 1; }
+        100% { opacity: 0; pointer-events: none; }
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>

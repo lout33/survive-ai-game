@@ -1,4 +1,5 @@
 import './style.css'
+import './utility.css'
 import { GameState } from './types'
 import {
   initializeGame,
@@ -19,6 +20,11 @@ import {
 
 // Get the app element
 const app = document.querySelector<HTMLDivElement>('#app')!
+
+// Add grid overlay to the body for futuristic effect
+const gridOverlay = document.createElement('div')
+gridOverlay.className = 'grid-overlay'
+document.body.appendChild(gridOverlay)
 
 // Initialize game state
 let gameState: GameState = initializeGame()
@@ -42,6 +48,24 @@ function showInfoModal() {
 function render() {
   // Clear the app container
   app.innerHTML = ''
+  
+  // Add game header with title
+  const header = document.createElement('header')
+  header.className = 'text-center py-4'
+  const title = document.createElement('h1')
+  title.className = 'game-title text-2xl md:text-3xl mb-0'
+  // title.textContent = 'Survive the AI Future: CEO Edition'
+  
+  // Add turn counter if we're in a game
+  if (gameState.currentScreen !== 'start') {
+    const turnInfo = document.createElement('div')
+    turnInfo.className = 'text-xs text-blue-300 mb-2'
+    turnInfo.textContent = `TURN ${gameState.turn}/12 | PHASE: ${gameState.currentPhase}`
+    header.appendChild(turnInfo)
+  }
+  
+  header.appendChild(title)
+  // app.appendChild(header)
   
   // Render based on current screen
   switch (gameState.currentScreen) {
@@ -143,6 +167,15 @@ function render() {
       console.error('Unknown screen state:', gameState.currentScreen)
   }
 }
+
+// Add parallax effect to grid overlay on mouse move
+document.addEventListener('mousemove', (e) => {
+  const x = e.clientX / window.innerWidth
+  const y = e.clientY / window.innerHeight
+  
+  // Small parallax effect
+  gridOverlay.style.backgroundPosition = `${x * 20}px ${y * 20}px`
+})
 
 // Handle window resize
 window.addEventListener('resize', () => {
