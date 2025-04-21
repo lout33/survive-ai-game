@@ -234,7 +234,16 @@ export function createCard(content: HTMLElement | string, extraClasses = ''): HT
 // Create start screen
 export function createStartScreen(onStartGame: () => void): HTMLElement {
   const container = document.createElement('div');
-  container.className = 'flex flex-col items-center justify-center min-h-[80vh] p-4 py-8';
+  container.className = 'flex flex-col items-center justify-center min-h-[80vh] p-4 py-8 relative';
+  
+  // Add open source badge in top right
+  const openSourceBadge = document.createElement('a');
+  openSourceBadge.href = 'https://github.com/lout33/survive-ai-game';
+  openSourceBadge.target = '_blank';
+  openSourceBadge.rel = 'noopener noreferrer';
+  openSourceBadge.className = 'absolute top-4 right-4 bg-blue-900/50 hover:bg-blue-800/50 text-blue-300 px-3 py-1 rounded-full text-xs font-mono border border-blue-800/30 transition-colors flex items-center gap-2';
+  openSourceBadge.innerHTML = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/></svg>Open Source';
+  container.appendChild(openSourceBadge);
   
   // Add animated terminal effect to the start screen
   const terminalEffect = document.createElement('div');
@@ -1561,4 +1570,4 @@ export function createEventScreen(gameState: GameState, onContinue: () => void):
   container.appendChild(eventCard);
   
   return container;
-} 
+}
